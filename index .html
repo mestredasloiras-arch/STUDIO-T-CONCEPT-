@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>STUDIO T CONCEPT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a961;
+  --gold-light: #e6c88a;
+  --gold-dark: #a8894a;
+  --black: #0a0a0a;
+  --black-soft: #141414;
+  --black-card: #1a1a1a;
+  --white: #ffffff;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-400: #9a9a9a;
+  --gray-600: #6a6a6a;
+  --danger: #e74c3c;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --info: #3498db;
+  --bg: var(--black);
+  --bg-soft: var(--black-soft);
+  --bg-card: var(--black-card);
+  --text: var(--white);
+  --text-muted: var(--gray-400);
+  --border: rgba(201,169,97,0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 40px rgba(0,0,0,0.4);
+  --shadow-gold: 0 8px 30px rgba(201,169,97,0.15);
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="light"] {
+  --bg: #fafafa;
+  --bg-soft: #ffffff;
+  --bg-card: #ffffff;
+  --text: #0a0a0a;
+  --text-muted: #6a6a6a;
+  --border: rgba(201,169,97,0.3);
+  --gray-100: #f0f0f0;
+  --shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  height: 100%; font-family: 'Inter', sans-serif;
+  background: var(--bg); color: var(--text);
+  overscroll-behavior: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+body { display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 600; letter-spacing: 0.5px; }
+button, input, select, textarea { font-family: inherit; font-size: 15px; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { color: var(--gold); text-decoration: none; }
+.hidden { display: none !important; }
+
+#splash {
+  position: fixed; inset: 0; background: var(--black);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  z-index: 9999; transition: opacity 0.6s ease;
+}
+.splash-logo {
+  font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; letter-spacing: 4px; text-align: center;
+}
+.splash-sub { font-size: 11px; letter-spacing: 8px; color: var(--gold); margin-top: 10px; }
+.splash-loader {
+  width: 60px; height: 2px; background: rgba(201,169,97,0.2); margin-top: 30px;
+  position: relative; overflow: hidden; border-radius: 2px;
+}
+.splash-loader::after {
+  content: ''; position: absolute; left: -40%; top: 0; width: 40%; height: 100%;
+  background: var(--gold); animation: load 1.2s infinite;
+}
+@keyframes load { 0%{left:-40%} 100%{left:100%} }
+
+#app { flex: 1; display: none; flex-direction: column; padding-bottom: 70px; }
+#app.active { display: flex; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-soft); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+}
+.topbar-logo {
+  font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  letter-spacing: 2px;
+}
+.topbar-logo img { height: 32px; width: auto; object-fit: contain; }
+.topbar-actions { display: flex; gap: 12px; align-items: center; }
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; transition: var(--transition);
+  background: var(--bg-card); border: 1px solid var(--border);
+}
+.icon-btn:hover { background: var(--gold); color: var(--black); }
+.icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+main { flex: 1; padding: 18px; max-width: 1200px; width: 100%; margin: 0 auto; }
+.page { animation: fadeIn 0.35s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.section-title {
+  font-family: 'Playfair Display', serif; font-size: 22px;
+  margin: 26px 0 14px; display: flex; align-items: center; gap: 10px;
+}
+.section-title::before {
+  content: ''; width: 4px; height: 22px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold-dark)); border-radius: 2px;
+}
+.muted { color: var(--text-muted); font-size: 13px; }
+.eyebrow { color: var(--gold); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+
+.carousel {
+  position: relative; border-radius: var(--radius); overflow: hidden;
+  height: 200px; box-shadow: var(--shadow);
+}
+.carousel-slide {
+  position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease;
+  background-size: cover; background-position: center; display: flex;
+  align-items: flex-end; padding: 24px;
+}
+.carousel-slide.active { opacity: 1; }
+.carousel-slide::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.1));
+}
+.carousel-content { position: relative; z-index: 2; color: white; }
+.carousel-content h3 { font-size: 20px; margin-bottom: 4px; }
+.carousel-content p { font-size: 13px; opacity: 0.9; }
+.carousel-dots {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 3;
+}
+.carousel-dots span {
+  width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); transition: var(--transition);
+}
+.carousel-dots span.active { background: var(--gold); width: 20px; border-radius: 3px; }
+
+.quick-actions {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px;
+}
+.quick-btn {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 6px; text-align: center;
+  transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.quick-btn:hover, .quick-btn:active {
+  border-color: var(--gold); transform: translateY(-3px); box-shadow: var(--shadow-gold);
+}
+.quick-btn svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 1.8; }
+.quick-btn span { font-size: 11px; font-weight: 500; color: var(--text); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 22px; border-radius: 50px; font-weight: 600; font-size: 14px;
+  transition: var(--transition); letter-spacing: 0.5px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+  color: var(--black); box-shadow: 0 6px 20px rgba(201,169,97,0.35);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(201,169,97,0.5); }
+.btn-outline { border: 1.5px solid var(--gold); color: var(--gold); background: transparent; }
+.btn-outline:hover { background: var(--gold); color: var(--black); }
+.btn-ghost { color: var(--text-muted); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 10px 16px; font-size: 13px; }
+.btn-danger { background: var(--danger); color: #fff; }
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+  transition: var(--transition);
+}
+.card:hover { border-color: var(--gold); }
+.card-row { display: flex; gap: 14px; align-items: center; }
+.thumb {
+  width: 70px; height: 70px; border-radius: 12px; flex-shrink: 0;
+  background-size: cover; background-position: center;
+  background-color: var(--black-soft); border: 1px solid var(--border);
+}
+.avatar {
+  width: 70px; height: 70px; border-radius: 50%; flex-shrink: 0;
+  background-size: cover; background-position: center;
+  background-color: var(--black-soft); border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; color: var(--gold);
+}
+
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 13px 15px; background: var(--bg-soft);
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  transition: var(--transition); outline: none; color: var(--text); font-size: 15px;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,97,0.15);
+}
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-error { color: var(--danger); font-size: 12px; margin-top: 4px; }
+
+/* ===== Image Uploader ===== */
+.img-uploader {
+  display: flex; gap: 12px; align-items: center;
+  padding: 12px; border: 1.5px dashed var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-soft); transition: var(--transition);
+}
+.img-uploader:hover { border-color: var(--gold); }
+.img-preview {
+  width: 70px; height: 70px; border-radius: 12px; flex-shrink: 0;
+  background-size: cover; background-position: center;
+  background-color: var(--black-soft); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 22px;
+}
+.img-preview.circle { border-radius: 50%; }
+.img-uploader-actions { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.img-uploader-actions .btn { padding: 9px 14px; font-size: 12px; }
+.img-hint { font-size: 11px; color: var(--text-muted); }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: fadeIn 0.25s ease;
+}
+.modal {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px; max-width: 460px; width: 100%;
+  max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow);
+  animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.modal-header h3 { font-size: 20px; }
+.modal-close { font-size: 26px; color: var(--text-muted); line-height: 1; }
+
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bg-soft); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 0; color: var(--text-muted); transition: var(--transition); font-size: 10px;
+}
+.nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.nav-item.active { color: var(--gold); }
+.nav-item.active svg { stroke: var(--gold); }
+
+@media (min-width: 900px) {
+  body { flex-direction: row; }
+  #app { padding-bottom: 0; padding-left: 240px; }
+  .bottom-nav {
+    top: 0; right: auto; width: 220px; flex-direction: column;
+    justify-content: flex-start; padding: 20px 12px; gap: 6px;
+    border-top: none; border-right: 1px solid var(--border);
+  }
+  .nav-item {
+    flex-direction: row; justify-content: flex-start; gap: 14px;
+    padding: 14px 16px; border-radius: 12px; font-size: 14px; font-weight: 500;
+  }
+  .nav-item:hover { background: var(--bg-card); }
+  .nav-item.active { background: rgba(201,169,97,0.1); }
+  .topbar { position: fixed; top: 0; left: 220px; right: 0; }
+  main { padding-top: 90px; }
+}
+
+.badge {
+  display: inline-block; padding: 4px 10px; border-radius: 50px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+}
+.badge-gold { background: rgba(201,169,97,0.15); color: var(--gold); border: 1px solid rgba(201,169,97,0.3); }
+.badge-success { background: rgba(39,174,96,0.15); color: var(--success); }
+.badge-warning { background: rgba(243,156,18,0.15); color: var(--warning); }
+.badge-danger { background: rgba(231,76,60,0.15); color: var(--danger); }
+.badge-info { background: rgba(52,152,219,0.15); color: var(--info); }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-day {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: 10px; font-size: 13px; font-weight: 500;
+  background: var(--bg-soft); border: 1.5px solid transparent; transition: var(--transition);
+}
+.cal-day.empty { background: transparent; }
+.cal-day.available:hover { border-color: var(--gold); }
+.cal-day.selected { background: var(--gold); color: var(--black); font-weight: 700; }
+.cal-day.disabled { color: var(--gray-600); cursor: not-allowed; opacity: 0.4; }
+.cal-day.today { border-color: var(--gold); }
+.cal-day .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); margin-top: 2px; }
+
+.slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+@media(min-width: 600px){ .slots-grid { grid-template-columns: repeat(5, 1fr);} }
+.slot {
+  padding: 12px 6px; text-align: center; border-radius: 10px; font-size: 13px; font-weight: 600;
+  background: var(--bg-soft); border: 1.5px solid var(--border); transition: var(--transition);
+}
+.slot:hover:not(.taken) { border-color: var(--gold); }
+.slot.selected { background: var(--gold); color: var(--black); border-color: var(--gold); }
+.slot.taken { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
+
+.steps { display: flex; justify-content: space-between; margin-bottom: 22px; }
+.step { flex: 1; text-align: center; position: relative; }
+.step::before {
+  content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: var(--border);
+}
+.step:last-child::before { display: none; }
+.step-dot {
+  width: 30px; height: 30px; border-radius: 50%; margin: 0 auto 6px;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;
+  position: relative; z-index: 1; transition: var(--transition);
+}
+.step.done .step-dot, .step.current .step-dot {
+  background: var(--gold); color: var(--black); border-color: var(--gold);
+}
+.step.done::before { background: var(--gold); }
+.step-label { font-size: 10px; color: var(--text-muted); }
+.step.current .step-label { color: var(--gold); font-weight: 600; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media(min-width: 700px){ .stat-grid { grid-template-columns: repeat(4, 1fr);} }
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+}
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; margin-top: 6px; color: var(--gold); }
+.stat-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(201,169,97,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+
+.admin-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; }
+.admin-tab {
+  padding: 9px 16px; border-radius: 50px; white-space: nowrap;
+  background: var(--bg-card); border: 1px solid var(--border); font-size: 13px; font-weight: 500;
+  transition: var(--transition);
+}
+.admin-tab.active { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+th { background: var(--bg-soft); font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(201,169,97,0.04); }
+
+#toast-container {
+  position: fixed; top: 20px; right: 20px; z-index: 9998;
+  display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+}
+.toast {
+  padding: 14px 20px; border-radius: 12px; background: var(--bg-card);
+  border-left: 4px solid var(--gold); color: var(--text); font-size: 14px;
+  box-shadow: var(--shadow); animation: toastIn 0.35s ease; max-width: 320px;
+  pointer-events: auto;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.info { border-left-color: var(--info); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-soft) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px;
+}
+@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+
+.row { display: flex; gap: 10px; align-items: center; }
+.row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.mt-2 { margin-top: 8px; } .mt-3 { margin-top: 14px; } .mt-4 { margin-top: 20px; }
+.mb-2 { margin-bottom: 8px; } .mb-3 { margin-bottom: 14px; } .mb-4 { margin-bottom: 20px; }
+.text-center { text-align: center; }
+.gold { color: var(--gold); }
+.flex-1 { flex: 1; }
+.stars { display: flex; gap: 2px; color: var(--gold); font-size: 16px; }
+.divider { height: 1px; background: var(--border); margin: 18px 0; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.empty-state svg { width: 50px; height: 50px; stroke: var(--gold); fill: none; stroke-width: 1.5; opacity: 0.5; margin-bottom: 12px; }
+
+.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media(min-width: 700px){ .gallery-grid { grid-template-columns: repeat(4, 1fr);} }
+.gallery-item {
+  aspect-ratio: 1; border-radius: 12px; background-size: cover; background-position: center;
+  cursor: pointer; transition: var(--transition); border: 1px solid var(--border);
+}
+.gallery-item:hover { transform: scale(1.03); border-color: var(--gold); }
+
+.progress-bar { height: 6px; background: var(--bg-soft); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-light), var(--gold)); transition: width 0.5s ease; }
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-logo">STUDIO T CONCEPT</div>
+  <div class="splash-sub">BELEZA & ELEGÂNCIA</div>
+  <div class="splash-loader"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="app">
+  <header class="topbar">
+    <div class="topbar-logo" id="topbarLogo">STUDIO T CONCEPT</div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="Tema">
+        <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="icon-btn" onclick="Router.go('notifications')" title="Notificações">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="mainContent"></main>
+
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<script>
+/* ==========================================================================
+   STUDIO T CONCEPT - App Principal
+   ========================================================================== */
+
+const DB = {
+  KEY: 'studio_t_concept_db_v1',
+  data: null,
+
+  defaults() {
+    return {
+      config: {
+        appName: 'STUDIO T CONCEPT',
+        primaryColor: '#c9a961',
+        logo: '',
+        phone: '(22) 99999-9999',
+        whatsapp: '5522999999999',
+        email: 'contato@studiotconcept.com',
+        instagram: '@studiotconcept',
+        facebook: 'studiotconcept',
+        website: '',
+        address: {
+          street: 'Rua Laura Teixeira da Silva, nº 43',
+          district: 'Centro',
+          city: 'Casimiro de Abreu - RJ',
+          mapsLink: 'https://maps.google.com/?q=Rua+Laura+Teixeira+da+Silva+43+Centro+Casimiro+de+Abreu+RJ'
+        },
+        hours: {
+          weekdays: '09:00 - 19:00',
+          saturday: '09:00 - 18:00',
+          sunday: 'Fechado',
+          openHour: 9,
+          closeHour: 19,
+        },
+        theme: 'dark',
+        pix: {
+          key: 'contato@studiotconcept.com',
+          keyType: 'E-mail',
+          receiver: 'STUDIO T CONCEPT LTDA',
+          bank: 'Banco do Brasil',
+          instructions: 'Envie o comprovante pelo WhatsApp após o pagamento.'
+        },
+        payments: ['Pix', 'Crédito', 'Débito', 'Dinheiro'],
+        reminders: { h24: true, h2: true, day: true, template24: 'Olá, [NOME]! Passando para lembrar do seu horário amanhã às [HORARIO] no STUDIO T CONCEPT. Esperamos por você!', template2: 'Olá, [NOME]! Seu horário é daqui a 2 horas ([HORARIO]). Te esperamos!', templateDay: 'Olá, [NOME]! Seu horário no STUDIO T CONCEPT está confirmado para hoje às [HORARIO]. Esperamos por você!' },
+        birthday: {
+          enabled: true, discount: 20, validDays: 30,
+          message: 'Feliz aniversário, [NOME]! 🎉\nO STUDIO T CONCEPT deseja um dia maravilhoso para você!',
+          coupon: 'ANIVER20'
+        },
+        banners: [
+          { id:'b1', title:'Transforme seu visual', subtitle:'Mechas iluminadas com preço especial', image:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800', active:true },
+          { id:'b2', title:'Tratamento Premium', subtitle:'Hidratação profunda com 30% off', image:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800', active:true },
+          { id:'b3', title:'Colorimetria Moderna', subtitle:'Novas técnicas de coloração', image:'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800', active:true },
+        ],
+        about: 'O STUDIO T CONCEPT é um espaço dedicado a realçar a sua beleza com sofisticação e técnica. Oferecemos serviços de alta qualidade com profissionais especializados, ambiente acolhedor e produtos premium. Nosso compromisso é transformar cada visita em uma experiência única.',
+        gallery: [
+          { id:'g1', url:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600', category:'Mechas', title:'Mechas Iluminadas' },
+          { id:'g2', url:'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600', category:'Cortes', title:'Corte Moderno' },
+          { id:'g3', url:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600', category:'Tratamentos', title:'Tratamento Capilar' },
+          { id:'g4', url:'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600', category:'Coloração', title:'Coloração' },
+          { id:'g5', url:'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=600', category:'Ambiente do salão', title:'Nosso Espaço' },
+          { id:'g6', url:'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600', category:'Equipe', title:'Nossa Equipe' },
+        ],
+        terms: 'Ao utilizar nossos serviços você concorda com nossos termos.',
+        privacy: 'Seus dados são tratados com segurança e confidencialidade.',
+      },
+      users: [
+        { id:'admin1', type:'admin', name:'Administrador', email:'admin@studiotconcept.com', password:'admin123', phone:'', birthdate:'', photo:'', blocked:false, createdAt: Date.now() }
+      ],
+      services: [
+        { id:'s1', name:'Corte Feminino', category:'Corte', description:'Corte personalizado com finalização.', duration:60, price:80, promo:0, image:'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400', active:true, professionals:['p1','p2'] },
+        { id:'s2', name:'Mechas Iluminadas', category:'Mechas', description:'Técnica de iluminação com resultado natural.', duration:180, price:450, promo:380, image:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400', active:true, professionals:['p1'] },
+        { id:'s3', name:'Coloração Completa', category:'Coloração', description:'Coloração profissional com produto premium.', duration:120, price:220, promo:0, image:'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400', active:true, professionals:['p1','p3'] },
+        { id:'s4', name:'Hidratação Profunda', category:'Tratamentos', description:'Tratamento intensivo de hidratação.', duration:60, price:120, promo:90, image:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400', active:true, professionals:['p2','p3'] },
+        { id:'s5', name:'Escova Modelada', category:'Escova', description:'Escova com modelagem.', duration:45, price:60, promo:0, image:'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400', active:true, professionals:['p2'] },
+        { id:'s6', name:'Loiros Perfeitos', category:'Loiros', description:'Especialidade em tons de loiro.', duration:240, price:600, promo:0, image:'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400', active:true, professionals:['p1'] },
+      ],
+      categories: ['Corte','Coloração','Mechas','Loiros','Tratamentos','Escova','Finalização','Outros'],
+      professionals: [
+        { id:'p1', name:'Thaís Oliveira', role:'Hair Stylist Sênior', specialties:'Mechas, Loiros, Colorimetria', bio:'Especialista em transformações de cor com 10 anos de experiência.', photo:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300', schedule:'09:00 - 19:00', days:[1,2,3,4,5,6], instagram:'@thais.stylist', active:true },
+        { id:'p2', name:'Marina Costa', role:'Cabeleireira', specialties:'Cortes, Escova', bio:'Apaixonada por cortes modernos e escovas perfeitas.', photo:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300', schedule:'10:00 - 18:00', days:[1,2,3,4,5], instagram:'@marina.hair', active:true },
+        { id:'p3', name:'Carla Santos', role:'Terapeuta Capilar', specialties:'Tratamentos, Hidratação', bio:'Especialista em saúde capilar e recuperação de fios.', photo:'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=300', schedule:'09:00 - 18:00', days:[2,3,4,5,6], instagram:'@carla.capilar', active:true },
+      ],
+      appointments: [],
+      payments: [],
+      notifications: [],
+      reviews: [],
+      coupons: [
+        { id:'c1', code:'ANIVER20', discount:20, type:'percent', validUntil: '', minValue:0, description:'Cupom de aniversário - 20% off' }
+      ],
+      promos: [
+        { id:'pr1', title:'Combo Corte + Escova', description:'Corte feminino + escova modelada com preço especial.', image:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600', price:120, originalPrice:140, startDate:'', endDate:'', coupon:'', action:'' }
+      ],
+    };
+  },
+
+  init() {
+    try {
+      const raw = localStorage.getItem(this.KEY);
+      if (raw) { this.data = JSON.parse(raw); }
+      else { this.data = this.defaults(); this.save(); }
+      const d = this.defaults();
+      for (const k in d) if (!(k in this.data)) this.data[k] = d[k];
+      this.save();
+    } catch(e) { console.error(e); this.data = this.defaults(); this.save(); }
+  },
+
+  save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.data)); } catch(e) { console.error('Save error', e); toast('Erro ao salvar. Armazenamento cheio?', 'error'); } },
+  reset() { localStorage.removeItem(this.KEY); this.init(); },
+};
+
+const State = {
+  user: null,
+  sessionKey: 'studio_t_session',
+  load() {
+    const id = localStorage.getItem(this.sessionKey);
+    if (id) this.user = DB.data.users.find(u => u.id === id) || null;
+  },
+  login(user) { this.user = user; localStorage.setItem(this.sessionKey, user.id); },
+  logout() { this.user = null; localStorage.removeItem(this.sessionKey); Router.go('home'); },
+};
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform='translateX(40px)'; setTimeout(() => el.remove(), 300); }, 3500);
+}
+
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const fmtMoney = (v) => 'R$ ' + Number(v || 0).toFixed(2).replace('.', ',');
+const fmtDate = (d) => { const dt = new Date(d); return dt.toLocaleDateString('pt-BR'); };
+const fmtDateTime = (d) => { const dt = new Date(d); return dt.toLocaleString('pt-BR'); };
+const todayISO = () => new Date().toISOString().slice(0,10);
+const initials = (name) => (name||'?').split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();
+const esc = (s) => String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function timeToMin(t) { const [h,m] = t.split(':').map(Number); return h*60+m; }
+function minToTime(m) { const h = Math.floor(m/60); const mm = m%60; return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0'); }
+
+/* ================== FILE / IMAGE PICKER ================== */
+function pickImage(targetId, previewId, isCircle) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (!f.type.startsWith('image/')) { toast('Selecione um arquivo de imagem.', 'error'); return; }
+    if (f.size > 3 * 1024 * 1024) {
+      toast('Imagem muito grande (máx 3MB). Tente outra.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      const el = document.getElementById(targetId);
+      if (el) el.value = dataUrl;
+      const p = previewId ? document.getElementById(previewId) : null;
+      if (p) {
+        p.style.backgroundImage = `url('${dataUrl}')`;
+        p.style.backgroundSize = 'cover';
+        p.style.backgroundPosition = 'center';
+        p.innerHTML = '';
+      }
+      toast('Imagem carregada!');
+    };
+    reader.onerror = () => toast('Falha ao ler imagem.', 'error');
+    reader.readAsDataURL(f);
+  };
+  input.click();
+}
+
+function removeImage(targetId, previewId, isCircle) {
+  const el = document.getElementById(targetId);
+  if (el) el.value = '';
+  const p = previewId ? document.getElementById(previewId) : null;
+  if (p) {
+    p.style.backgroundImage = 'none';
+    p.innerHTML = isCircle ? '📷' : '🖼️';
+  }
+  toast('Imagem removida.', 'info');
+}
+
+function imgUploaderHTML({ inputId, previewId, currentSrc, inputName, hintText, circle, placeholderUrl }) {
+  const previewStyle = currentSrc ? `background-image:url('${esc(currentSrc)}')` : '';
+  const iconContent = currentSrc ? '' : (circle ? '📷' : '🖼️');
+  return `
+    <div class="form-group">
+      <label class="form-label">${esc(inputName||'Imagem')}</label>
+      <div class="img-uploader">
+        <div class="img-preview ${circle?'circle':''}" id="${previewId}" style="${previewStyle}">${iconContent}</div>
+        <div class="img-uploader-actions">
+          <button type="button" class="btn btn-primary btn-sm" onclick="pickImage('${inputId}','${previewId}',${circle?true:false})">📁 Escolher da galeria</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="removeImage('${inputId}','${previewId}',${circle?true:false})">Remover</button>
+          <span class="img-hint">${esc(hintText||'JPG, PNG. Máx 3MB')}</span>
+        </div>
+      </div>
+      <input type="hidden" id="${inputId}" value="${esc(currentSrc||'')}">
+      <input class="form-input mt-2" id="${inputId}_url" placeholder="${esc(placeholderUrl||'ou cole uma URL da web')}" oninput="document.getElementById('${inputId}').value=this.value; const p=document.getElementById('${previewId}'); if(this.value){p.style.backgroundImage='url(\\''+this.value+'\\')';p.innerHTML='';}else{p.style.backgroundImage='none';p.innerHTML='${circle?'📷':'🖼️'}';}">
+    </div>
+  `;
+}
+
+/* ================== THEME ================== */
+function toggleTheme() {
+  const cur = DB.data.config.theme === 'dark' ? 'light' : 'dark';
+  DB.data.config.theme = cur; DB.save(); applyTheme();
+}
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', DB.data.config.theme || 'dark');
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.innerHTML = DB.data.config.theme === 'dark'
+    ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+    : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>';
+  updateLogo();
+}
+
+function updateLogo() {
+  const el = document.getElementById('topbarLogo');
+  if (!el) return;
+  if (DB.data.config.logo) {
+    el.innerHTML = `<img src="${DB.data.config.logo}" alt="logo">`;
+  } else {
+    el.innerHTML = esc(DB.data.config.appName);
+  }
+}
+
+/* ================== ROUTER ================== */
+const Router = {
+  current: 'home',
+  go(page, params) {
+    if (page.startsWith('admin') && (!State.user || State.user.type !== 'admin')) {
+      toast('Acesso restrito ao administrador.', 'error');
+      page = 'home';
+    }
+    if (['profile','appointments','notifications','schedule'].includes(page) && !State.user) {
+      toast('Faça login para continuar.', 'info');
+      page = 'login';
+    }
+    this.current = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    render(page, params);
+    this.updateNav();
+  },
+  updateNav() {
+    const nav = document.getElementById('bottomNav');
+    const isAdmin = State.user && State.user.type === 'admin';
+    let items;
+    if (isAdmin) {
+      items = [
+        { id:'admin', label:'Painel', icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>' },
+        { id:'admin-appointments', label:'Agendamentos', icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
+        { id:'admin-clients', label:'Clientes', icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' },
+        { id:'admin-services', label:'Serviços', icon:'<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>' },
+        { id:'profile', label:'Perfil', icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>' },
+      ];
+    } else {
+      items = [
+        { id:'home', label:'Início', icon:'<path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/>' },
+        { id:'schedule', label:'Agendar', icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M12 14v3M12 20h.01"/>' },
+        { id:'services', label:'Serviços', icon:'<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>' },
+        { id:'notifications', label:'Notificações', icon:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>' },
+        { id:'profile', label:'Perfil', icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>' },
+      ];
+    }
+    nav.innerHTML = items.map(it => `
+      <button class="nav-item ${this.current === it.id ? 'active' : ''}" onclick="Router.go('${it.id}')">
+        <svg viewBox="0 0 24 24">${it.icon}</svg>
+        <span>${it.label}</span>
+      </button>
+    `).join('');
+  }
+};
+
+/* ================== RENDER DISPATCHER ================== */
+function render(page, params) {
+  const main = document.getElementById('mainContent');
+  const map = {
+    'home': renderHome, 'services': renderServices, 'professionals': renderProfessionals,
+    'schedule': renderSchedule, 'profile': renderProfile, 'appointments': renderAppointments,
+    'notifications': renderNotifications, 'promos': renderPromos, 'gallery': renderGallery,
+    'contact': renderContact, 'about': renderAbout, 'login': renderLogin, 'register': renderRegister,
+    'payment': renderPayment, 'reviews': renderReviews,
+    'admin': renderAdminDashboard, 'admin-appointments': renderAdminAppointments,
+    'admin-clients': renderAdminClients, 'admin-services': renderAdminServices,
+    'admin-professionals': renderAdminProfessionals, 'admin-payments': renderAdminPayments,
+    'admin-content': renderAdminContent, 'admin-promos': renderAdminPromos,
+    'admin-coupons': renderAdminCoupons, 'admin-notifications': renderAdminNotifications,
+    'admin-reviews': renderAdminReviews, 'admin-settings': renderAdminSettings,
+    'admin-birthdays': renderAdminBirthdays,
+  };
+  (map[page] || renderHome)(main, params);
+}
+
+/* ================== HOME ================== */
+function renderHome(main) {
+  const cfg = DB.data.config;
+  const featured = DB.data.services.filter(s => s.active).slice(0, 3);
+  const banners = cfg.banners.filter(b => b.active);
+
+  main.innerHTML = `
+    <div class="page">
+      <div class="carousel" id="homeCarousel">
+        ${banners.map((b,i) => `
+          <div class="carousel-slide ${i===0?'active':''}" style="background-image:url('${b.image}')">
+            <div class="carousel-content">
+              <h3>${esc(b.title)}</h3>
+              <p>${esc(b.subtitle)}</p>
+            </div>
+          </div>
+        `).join('')}
+        <div class="carousel-dots">${banners.map((_,i)=>`<span class="${i===0?'active':''}"></span>`).join('')}</div>
+      </div>
+
+      <div class="quick-actions">
+        <button class="quick-btn" onclick="Router.go('schedule')">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Agendar</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('appointments')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span>Meus horários</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('services')">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>Serviços</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('professionals')">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <span>Equipe</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('promos')">
+          <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg>
+          <span>Promoções</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('payment')">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          <span>Pagamento</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('gallery')">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Galeria</span>
+        </button>
+        <button class="quick-btn" onclick="Router.go('contact')">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>Contato</span>
+        </button>
+      </div>
+
+      <h2 class="section-title">Conheça o STUDIO T CONCEPT</h2>
+      <div class="card">
+        <p class="muted" style="line-height: 1.7;">${esc(cfg.about)}</p>
+      </div>
+
+      <h2 class="section-title">Serviços em Destaque</h2>
+      ${featured.map(s => serviceCard(s)).join('')}
+
+      <h2 class="section-title">Nossa Equipe</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+        ${DB.data.professionals.filter(p=>p.active).slice(0,4).map(p => `
+          <div class="card" style="text-align:center;padding:14px;">
+            <div class="avatar" style="margin:0 auto 10px; background-image:url('${p.photo}')"></div>
+            <div style="font-weight:600;font-size:14px;">${esc(p.name)}</div>
+            <div class="muted" style="font-size:11px;">${esc(p.role)}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <h2 class="section-title">Depoimentos</h2>
+      ${renderHomeReviews()}
+
+      <div style="margin-top:26px;padding:22px;background:linear-gradient(135deg,rgba(201,169,97,0.15),rgba(201,169,97,0.05));border:1px solid var(--border);border-radius:var(--radius);text-align:center;">
+        <h3 style="font-size:20px;margin-bottom:8px;">Pronta para sua transformação?</h3>
+        <p class="muted mb-3">Agende agora e viva a experiência STUDIO T CONCEPT.</p>
+        <button class="btn btn-primary" onclick="Router.go('schedule')">Agendar horário</button>
+      </div>
+    </div>
+  `;
+  initCarousel();
+}
+
+function initCarousel() {
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-dots span');
+  if (!slides.length) return;
+  let idx = 0;
+  clearInterval(window._carTimer);
+  window._carTimer = setInterval(() => {
+    slides[idx].classList.remove('active'); dots[idx]?.classList.remove('active');
+    idx = (idx + 1) % slides.length;
+    slides[idx].classList.add('active'); dots[idx]?.classList.add('active');
+  }, 4500);
+}
+
+function renderHomeReviews() {
+  const revs = DB.data.reviews.filter(r => !r.hidden).slice(0, 3);
+  if (!revs.length) return '<div class="card"><p class="muted">Ainda não temos avaliações. Seja a primeira a avaliar!</p></div>';
+  return revs.map(r => `
+    <div class="card">
+      <div class="row-between">
+        <div class="row">
+          <div class="avatar" style="width:40px;height:40px;font-size:14px;background-image:url('${r.userPhoto||''}')">${!r.userPhoto?initials(r.userName):''}</div>
+          <div>
+            <div style="font-weight:600;font-size:14px;">${esc(r.userName)}</div>
+            <div class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+          </div>
+        </div>
+        <span class="muted" style="font-size:11px;">${fmtDate(r.createdAt)}</span>
+      </div>
+      <p style="margin-top:10px;font-size:14px;line-height:1.6;">${esc(r.comment)}</p>
+    </div>
+  `).join('');
+}
+
+function serviceCard(s) {
+  const price = s.promo > 0 ? s.promo : s.price;
+  return `
+    <div class="card" onclick="openServiceDetail('${s.id}')" style="cursor:pointer;">
+      <div class="card-row">
+        <div class="thumb" style="background-image:url('${s.image}')"></div>
+        <div class="flex-1">
+          <div class="row-between">
+            <div style="font-weight:600;font-size:15px;">${esc(s.name)}</div>
+            ${s.promo > 0 ? `<span class="badge badge-gold">Promo</span>` : ''}
+          </div>
+          <div class="muted" style="font-size:12px;margin-top:2px;">${esc(s.category)} • ${s.duration} min</div>
+          <div class="mt-2">
+            ${s.promo > 0 ? `<span class="muted" style="text-decoration:line-through;font-size:12px;">${fmtMoney(s.price)}</span> ` : ''}
+            <span class="gold" style="font-weight:700;font-size:16px;">${fmtMoney(price)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openServiceDetail(id) {
+  const s = DB.data.services.find(x => x.id === id);
+  if (!s) return;
+  const price = s.promo > 0 ? s.promo : s.price;
+  openModal(`
+    <div class="modal-header">
+      <h3>${esc(s.name)}</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div style="height:180px;border-radius:12px;background:url('${s.image}') center/cover;margin-bottom:16px;"></div>
+    <p class="muted mb-3">${esc(s.description)}</p>
+    <div class="row-between mb-2"><span class="muted">Categoria</span><span>${esc(s.category)}</span></div>
+    <div class="row-between mb-2"><span class="muted">Duração</span><span>${s.duration} min</span></div>
+    <div class="row-between mb-3"><span class="muted">Valor</span><span class="gold" style="font-weight:700;font-size:18px;">${fmtMoney(price)}</span></div>
+    <button class="btn btn-primary btn-block" onclick="closeModal();startSchedule('${s.id}')">Agendar este serviço</button>
+  `);
+}
+
+/* ================== SERVICES ================== */
+function renderServices(main) {
+  const cats = ['Todos', ...DB.data.categories];
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Serviços</h2>
+      <div class="admin-tabs" id="catTabs">
+        ${cats.map((c,i) => `<button class="admin-tab ${i===0?'active':''}" onclick="filterServices('${c}',this)">${esc(c)}</button>`).join('')}
+      </div>
+      <div id="servicesList">
+        ${DB.data.services.filter(s=>s.active).map(s => serviceCard(s)).join('') || '<div class="empty-state"><p>Nenhum serviço cadastrado.</p></div>'}
+      </div>
+    </div>
+  `;
+}
+function filterServices(cat, btn) {
+  document.querySelectorAll('#catTabs .admin-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const list = cat === 'Todos' ? DB.data.services.filter(s=>s.active) : DB.data.services.filter(s=>s.active && s.category === cat);
+  document.getElementById('servicesList').innerHTML = list.map(s => serviceCard(s)).join('') || '<div class="empty-state"><p>Nenhum serviço nesta categoria.</p></div>';
+}
+
+/* ================== PROFESSIONALS ================== */
+function renderProfessionals(main) {
+  const pros = DB.data.professionals.filter(p => p.active);
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Nossos Profissionais</h2>
+      ${pros.map(p => `
+        <div class="card" onclick="openProDetail('${p.id}')" style="cursor:pointer;">
+          <div class="card-row">
+            <div class="avatar" style="background-image:url('${p.photo}')"></div>
+            <div class="flex-1">
+              <div style="font-weight:600;">${esc(p.name)}</div>
+              <div class="muted" style="font-size:12px;">${esc(p.role)}</div>
+              <div class="muted mt-2" style="font-size:12px;">${esc(p.specialties)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function openProDetail(id) {
+  const p = DB.data.professionals.find(x => x.id === id);
+  if (!p) return;
+  const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  openModal(`
+    <div class="modal-header"><h3>${esc(p.name)}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="avatar" style="margin:0 auto;width:100px;height:100px;background-image:url('${p.photo}')"></div>
+      <div style="font-weight:600;margin-top:10px;">${esc(p.name)}</div>
+      <div class="muted" style="font-size:13px;">${esc(p.role)}</div>
+    </div>
+    <p class="muted mb-3" style="line-height:1.6;">${esc(p.bio)}</p>
+    <div class="mb-2"><span class="muted">Especialidades: </span>${esc(p.specialties)}</div>
+    <div class="mb-2"><span class="muted">Horário: </span>${esc(p.schedule)}</div>
+    <div class="mb-3"><span class="muted">Dias: </span>${p.days.map(d=>days[d]).join(', ')}</div>
+    ${p.instagram ? `<div class="mb-3"><span class="muted">Instagram: </span>${esc(p.instagram)}</div>` : ''}
+    <button class="btn btn-primary btn-block" onclick="closeModal();Router.go('schedule')">Agendar com ${esc(p.name.split(' ')[0])}</button>
+  `);
+}
+
+/* ================== SCHEDULE ================== */
+let scheduleState = { step: 1, service: null, professional: null, date: todayISO(), time: null, payment: 'Pix' };
+
+function startSchedule(serviceId) {
+  scheduleState = { step: 1, service: serviceId, professional: null, date: todayISO(), time: null, payment: 'Pix' };
+  Router.go('schedule');
+}
+
+function renderSchedule(main) {
+  const st = scheduleState;
+  const step = st.step;
+  const s = st.service ? DB.data.services.find(x=>x.id===st.service) : null;
+
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Agendamento</h2>
+      <div class="steps">
+        ${['Serviço','Profissional','Data','Horário','Confirmar'].map((l,i) => {
+          const n = i+1;
+          const cls = n<step?'done':n===step?'current':'';
+          return `<div class="step ${cls}"><div class="step-dot">${n<step?'✓':n}</div><div class="step-label">${l}</div></div>`;
+        }).join('')}
+      </div>
+      <div id="stepContent"></div>
+    </div>
+  `;
+  const content = document.getElementById('stepContent');
+
+  if (step === 1) {
+    content.innerHTML = `
+      <p class="muted mb-3">Escolha o serviço desejado:</p>
+      ${DB.data.services.filter(x=>x.active).map(x => `
+        <div class="card" style="cursor:pointer;${st.service===x.id?'border-color:var(--gold);':''}" onclick="selectService('${x.id}')">
+          <div class="card-row">
+            <div class="thumb" style="background-image:url('${x.image}')"></div>
+            <div class="flex-1">
+              <div style="font-weight:600;">${esc(x.name)}</div>
+              <div class="muted" style="font-size:12px;">${x.duration} min • ${esc(x.category)}</div>
+              <div class="gold" style="font-weight:600;margin-top:4px;">${fmtMoney(x.promo>0?x.promo:x.price)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    `;
+  } else if (step === 2) {
+    const pros = DB.data.professionals.filter(p => p.active && (!s.professionals || s.professionals.length===0 || s.professionals.includes(p.id)));
+    content.innerHTML = `
+      <p class="muted mb-3">Escolha o profissional:</p>
+      ${pros.map(p => `
+        <div class="card" style="cursor:pointer;${st.professional===p.id?'border-color:var(--gold);':''}" onclick="selectProfessional('${p.id}')">
+          <div class="card-row">
+            <div class="avatar" style="background-image:url('${p.photo}')"></div>
+            <div class="flex-1">
+              <div style="font-weight:600;">${esc(p.name)}</div>
+              <div class="muted" style="font-size:12px;">${esc(p.role)}</div>
+              <div class="muted mt-2" style="font-size:12px;">${esc(p.specialties)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('') || '<div class="empty-state"><p>Nenhum profissional disponível.</p></div>'}
+      <button class="btn btn-ghost btn-block mt-3" onclick="schedulePrev()">← Voltar</button>
+    `;
+  } else if (step === 3) {
+    content.innerHTML = `
+      <p class="muted mb-3">Escolha a data:</p>
+      <div id="calWrap"></div>
+      <button class="btn btn-ghost btn-block mt-3" onclick="schedulePrev()">← Voltar</button>
+    `;
+    renderCalendar();
+  } else if (step === 4) {
+    content.innerHTML = `
+      <p class="muted mb-3">Escolha o horário:</p>
+      <div class="slots-grid" id="slotsWrap"></div>
+      <div class="mt-3">
+        <button class="btn btn-ghost" onclick="schedulePrev()">← Voltar</button>
+      </div>
+    `;
+    renderSlots();
+  } else if (step === 5) {
+    const s = DB.data.services.find(x=>x.id===st.service);
+    const p = DB.data.professionals.find(x=>x.id===st.professional);
+    const price = s.promo > 0 ? s.promo : s.price;
+    content.innerHTML = `
+      <p class="muted mb-3">Confirme os dados do seu agendamento:</p>
+      <div class="card">
+        <div class="row-between mb-2"><span class="muted">Serviço</span><span style="font-weight:600;">${esc(s.name)}</span></div>
+        <div class="row-between mb-2"><span class="muted">Profissional</span><span>${esc(p.name)}</span></div>
+        <div class="row-between mb-2"><span class="muted">Data</span><span>${fmtDate(st.date)}</span></div>
+        <div class="row-between mb-2"><span class="muted">Horário</span><span>${st.time}</span></div>
+        <div class="row-between mb-2"><span class="muted">Duração</span><span>${s.duration} min</span></div>
+        <div class="divider"></div>
+        <div class="row-between"><span class="muted">Total</span><span class="gold" style="font-weight:700;font-size:20px;">${fmtMoney(price)}</span></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Forma de pagamento</label>
+        <select class="form-select" id="payMethod">
+          ${DB.data.config.payments.map(p=>`<option ${st.payment===p?'selected':''}>${p}</option>`).join('')}
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block mt-3" onclick="confirmSchedule()">Confirmar agendamento</button>
+      <button class="btn btn-ghost btn-block mt-2" onclick="schedulePrev()">← Voltar</button>
+    `;
+  }
+}
+function selectService(id) { scheduleState.service = id; scheduleState.step = 2; renderSchedule(document.getElementById('mainContent')); }
+function selectProfessional(id) { scheduleState.professional = id; scheduleState.step = 3; renderSchedule(document.getElementById('mainContent')); }
+function schedulePrev() { scheduleState.step = Math.max(1, scheduleState.step - 1); renderSchedule(document.getElementById('mainContent')); }
+
+function renderCalendar() {
+  const wrap = document.getElementById('calWrap');
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const first = new Date(year, month, 1).getDay();
+  const days = new Date(year, month+1, 0).getDate();
+  const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  let html = `<div class="card"><div style="text-align:center;font-weight:600;margin-bottom:12px;">${monthNames[month]} ${year}</div><div class="cal-grid">`;
+  ['D','S','T','Q','Q','S','S'].forEach(d => html += `<div style="text-align:center;font-size:11px;color:var(--text-muted);">${d}</div>`);
+  for (let i=0; i<first; i++) html += `<div class="cal-day empty"></div>`;
+  for (let d=1; d<=days; d++) {
+    const dateObj = new Date(year, month, d);
+    const iso = dateObj.toISOString().slice(0,10);
+    const dow = dateObj.getDay();
+    const isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const isSunday = dow === 0;
+    const disabled = isPast || isSunday;
+    const isSelected = iso === scheduleState.date;
+    html += `<button class="cal-day ${disabled?'disabled':'available'} ${isSelected?'selected':''} ${iso===todayISO()?'today':''}" ${disabled?'disabled':''} onclick="pickDate('${iso}')">${d}${!disabled?'<span class="dot"></span>':''}</button>`;
+  }
+  html += `</div></div>`;
+  wrap.innerHTML = html;
+}
+function pickDate(iso) { scheduleState.date = iso; scheduleState.step = 4; renderSchedule(document.getElementById('mainContent')); }
+
+function renderSlots() {
+  const wrap = document.getElementById('slotsWrap');
+  const s = DB.data.services.find(x=>x.id===scheduleState.service);
+  const cfg = DB.data.config.hours;
+  const dur = s.duration;
+  const slots = [];
+  const open = cfg.openHour*60, close = cfg.closeHour*60;
+  for (let t=open; t + dur <= close; t += 30) {
+    slots.push(minToTime(t));
+  }
+  const taken = DB.data.appointments.filter(a =>
+    a.date === scheduleState.date &&
+    a.professional === scheduleState.professional &&
+    ['confirmed','pending','rescheduled'].includes(a.status)
+  );
+  wrap.innerHTML = slots.map(t => {
+    const startMin = timeToMin(t);
+    const endMin = startMin + dur;
+    const conflict = taken.some(a => {
+      const aS = timeToMin(a.time);
+      const aE = aS + (a.duration||60);
+      return startMin < aE && endMin > aS;
+    });
+    const isSel = scheduleState.time === t;
+    return `<button class="slot ${conflict?'taken':''} ${isSel?'selected':''}" ${conflict?'disabled':''} onclick="pickTime('${t}')">${t}</button>`;
+  }).join('');
+}
+function pickTime(t) { scheduleState.time = t; scheduleState.step = 5; renderSchedule(document.getElementById('mainContent')); }
+
+function confirmSchedule() {
+  if (!State.user) { toast('Faça login para agendar.', 'info'); Router.go('login'); return; }
+  const st = scheduleState;
+  const s = DB.data.services.find(x=>x.id===st.service);
+  const p = DB.data.professionals.find(x=>x.id===st.professional);
+  const payMethod = document.getElementById('payMethod').value;
+  const appt = {
+    id: uid(),
+    userId: State.user.id,
+    userName: State.user.name,
+    serviceId: s.id,
+    serviceName: s.name,
+    professionalId: p.id,
+    professionalName: p.name,
+    date: st.date,
+    time: st.time,
+    duration: s.duration,
+    price: s.promo > 0 ? s.promo : s.price,
+    payment: payMethod,
+    status: 'confirmed',
+    createdAt: Date.now(),
+  };
+  DB.data.appointments.unshift(appt);
+  DB.data.notifications.unshift({
+    id: uid(), userId: State.user.id, title: 'Agendamento confirmado',
+    message: `Seu horário para ${s.name} em ${fmtDate(st.date)} às ${st.time} foi confirmado.`,
+    type: 'confirmacao', read: false, createdAt: Date.now(),
+  });
+  DB.data.payments.unshift({
+    id: uid(), appointmentId: appt.id, userId: State.user.id, userName: State.user.name,
+    amount: appt.price, method: payMethod, status: 'pendente', createdAt: Date.now(),
+  });
+  DB.save();
+  scheduleState = { step: 1, service: null, professional: null, date: todayISO(), time: null, payment: 'Pix' };
+  openModal(`
+    <div class="modal-header"><h3>Agendamento Confirmado ✨</h3><button class="modal-close" onclick="closeModal();Router.go('appointments')">×</button></div>
+    <div style="text-align:center;padding:12px 0;">
+      <div style="width:70px;height:70px;border-radius:50%;background:rgba(201,169,97,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:32px;">✓</div>
+      <p style="line-height:1.6;">Seu horário para <strong>${esc(s.name)}</strong> com <strong>${esc(p.name)}</strong> está confirmado para <strong>${fmtDate(st.date)}</strong> às <strong>${st.time}</strong>.</p>
+      <p class="muted mt-2" style="font-size:13px;">Você receberá lembretes automáticos.</p>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="closeModal();Router.go('appointments')">Ver meus agendamentos</button>
+  `);
+  toast('Agendamento confirmado!');
+}
+
+/* ================== APPOINTMENTS ================== */
+function renderAppointments(main) {
+  if (!State.user) { Router.go('login'); return; }
+  const list = DB.data.appointments.filter(a => a.userId === State.user.id);
+  const upcoming = list.filter(a => new Date(a.date+'T'+a.time) >= new Date() && ['confirmed','pending','rescheduled'].includes(a.status));
+  const past = list.filter(a => !upcoming.includes(a));
+
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Meus Agendamentos</h2>
+      <p class="eyebrow">Próximos</p>
+      ${upcoming.length ? upcoming.map(a => appointmentCard(a, true)).join('') : '<div class="card"><p class="muted">Nenhum agendamento próximo. <a onclick="Router.go(\'schedule\')">Agendar agora</a></p></div>'}
+      <p class="eyebrow mt-4">Histórico</p>
+      ${past.length ? past.map(a => appointmentCard(a, false)).join('') : '<div class="card"><p class="muted">Sem histórico.</p></div>'}
+    </div>
+  `;
+}
+
+function appointmentCard(a, upcoming) {
+  const statusMap = {
+    'confirmed': { label: 'Confirmado', cls: 'badge-success' },
+    'pending': { label: 'Pendente', cls: 'badge-warning' },
+    'cancelled': { label: 'Cancelado', cls: 'badge-danger' },
+    'rescheduled': { label: 'Reagendado', cls: 'badge-info' },
+    'completed': { label: 'Concluído', cls: 'badge-gold' },
+  };
+  const st = statusMap[a.status] || statusMap.confirmed;
+  return `
+    <div class="card">
+      <div class="row-between mb-2">
+        <div style="font-weight:600;">${esc(a.serviceName)}</div>
+        <span class="badge ${st.cls}">${st.label}</span>
+      </div>
+      <div class="muted" style="font-size:13px;">${fmtDate(a.date)} às ${a.time} • ${esc(a.professionalName)}</div>
+      <div class="gold mt-2" style="font-weight:700;">${fmtMoney(a.price)}</div>
+      ${upcoming ? `
+        <div class="row mt-3">
+          <button class="btn btn-outline btn-sm" onclick="rescheduleAppt('${a.id}')">Reagendar</button>
+          <button class="btn btn-danger btn-sm" onclick="cancelAppt('${a.id}')">Cancelar</button>
+        </div>
+      ` : (a.status === 'completed' && !DB.data.reviews.find(r=>r.appointmentId===a.id) ? `
+        <button class="btn btn-primary btn-sm mt-3" onclick="openReview('${a.id}')">⭐ Avaliar</button>
+      ` : '')}
+    </div>
+  `;
+}
+
+function cancelAppt(id) {
+  if (!confirm('Deseja realmente cancelar este agendamento?')) return;
+  const a = DB.data.appointments.find(x => x.id === id);
+  if (!a) return;
+  a.status = 'cancelled';
+  DB.data.notifications.unshift({ id: uid(), userId: a.userId, title: 'Agendamento cancelado', message: `Seu agendamento para ${a.serviceName} em ${fmtDate(a.date)} foi cancelado.`, type: 'cancelamento', read: false, createdAt: Date.now() });
+  DB.save();
+  toast('Agendamento cancelado.');
+  Router.go('appointments');
+}
+
+function rescheduleAppt(id) {
+  const a = DB.data.appointments.find(x => x.id === id);
+  if (!a) return;
+  scheduleState = { step: 4, service: a.serviceId, professional: a.professionalId, date: todayISO(), time: null, payment: a.payment };
+  a.status = 'cancelled';
+  DB.save();
+  toast('Escolha nova data e horário.', 'info');
+  Router.go('schedule');
+}
+
+function openReview(apptId) {
+  openModal(`
+    <div class="modal-header"><h3>Avaliar atendimento</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group">
+      <label class="form-label">Sua nota</label>
+      <div class="stars" id="starPicker" style="font-size:32px;cursor:pointer;">
+        ${[1,2,3,4,5].map(n => `<span onclick="setStars(${n})" data-star="${n}">☆</span>`).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Comentário</label>
+      <textarea class="form-textarea" id="reviewComment" placeholder="Conte como foi sua experiência..."></textarea>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="submitReview('${apptId}')">Enviar avaliação</button>
+  `);
+  window._stars = 5; setStars(5);
+}
+function setStars(n) {
+  window._stars = n;
+  document.querySelectorAll('#starPicker span').forEach(s => {
+    s.textContent = Number(s.dataset.star) <= n ? '★' : '☆';
+  });
+}
+function submitReview(apptId) {
+  const a = DB.data.appointments.find(x => x.id === apptId);
+  const comment = document.getElementById('reviewComment').value.trim();
+  if (!comment) { toast('Escreva um comentário.', 'error'); return; }
+  DB.data.reviews.unshift({
+    id: uid(), appointmentId: apptId, userId: State.user.id,
+    userName: State.user.name, userPhoto: State.user.photo || '',
+    stars: window._stars, comment, hidden: false, featured: false,
+    createdAt: Date.now(),
+  });
+  DB.save();
+  closeModal();
+  toast('Obrigada pela sua avaliação! 💛');
+  Router.go('appointments');
+}
+
+/* ================== PROFILE ================== */
+function renderProfile(main) {
+  if (!State.user) { Router.go('login'); return; }
+  const u = State.user;
+  const appts = DB.data.appointments.filter(a => a.userId === u.id);
+  const payments = DB.data.payments.filter(p => p.userId === u.id);
+  const next = appts.filter(a => new Date(a.date+'T'+a.time) >= new Date() && ['confirmed','pending','rescheduled'].includes(a.status))[0];
+  const coupons = DB.data.coupons.filter(c => c.code);
+
+  main.innerHTML = `
+    <div class="page">
+      <div class="card" style="text-align:center;">
+        <div class="avatar" style="margin:0 auto 12px;width:90px;height:90px;font-size:30px;background-image:url('${u.photo||''}')">${!u.photo?initials(u.name):''}</div>
+        <h3 style="font-size:20px;">${esc(u.name)}</h3>
+        <p class="muted">${esc(u.email)}</p>
+        ${u.phone ? `<p class="muted">${esc(u.phone)}</p>` : ''}
+        <div class="row mt-3" style="justify-content:center;">
+          <button class="btn btn-outline btn-sm" onclick="editProfile()">Editar perfil</button>
+          ${u.type === 'admin' ? `<button class="btn btn-primary btn-sm" onclick="Router.go('admin')">Painel Admin</button>` : ''}
+        </div>
+      </div>
+
+      ${u.type === 'client' ? `
+        <h2 class="section-title">Próximo agendamento</h2>
+        ${next ? appointmentCard(next, true) : '<div class="card"><p class="muted">Sem agendamentos futuros.</p></div>'}
+
+        <h2 class="section-title">Meus cupons</h2>
+        ${coupons.length ? coupons.map(c => `
+          <div class="card">
+            <div class="row-between">
+              <div>
+                <div class="gold" style="font-weight:700;font-family:Playfair Display,serif;font-size:20px;">${esc(c.code)}</div>
+                <div class="muted" style="font-size:12px;">${esc(c.description)}</div>
+              </div>
+              <span class="badge badge-gold">${c.discount}% OFF</span>
+            </div>
+          </div>
+        `).join('') : '<div class="card"><p class="muted">Nenhum cupom disponível.</p></div>'}
+
+        <h2 class="section-title">Histórico de pagamentos</h2>
+        ${payments.length ? payments.slice(0,5).map(p => `
+          <div class="card">
+            <div class="row-between">
+              <div>
+                <div style="font-weight:600;">${fmtMoney(p.amount)}</div>
+                <div class="muted" style="font-size:12px;">${p.method} • ${fmtDate(p.createdAt)}</div>
+              </div>
+              <span class="badge ${p.status==='pago'?'badge-success':p.status==='pendente'?'badge-warning':'badge-info'}">${p.status}</span>
+            </div>
+          </div>
+        `).join('') : '<div class="card"><p class="muted">Sem pagamentos registrados.</p></div>'}
+      ` : ''}
+
+      <div class="mt-4">
+        <button class="btn btn-outline btn-block mb-2" onclick="Router.go('contact')">Suporte / Contato</button>
+        <button class="btn btn-outline btn-block mb-2" onclick="Router.go('about')">Sobre o salão</button>
+        <button class="btn btn-ghost btn-block" onclick="doLogout()">Sair da conta</button>
+      </div>
+    </div>
+  `;
+}
+
+function editProfile() {
+  const u = State.user;
+  openModal(`
+    <div class="modal-header"><h3>Editar perfil</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="editName" value="${esc(u.name)}"></div>
+    <div class="form-group"><label class="form-label">Telefone</label><input class="form-input" id="editPhone" value="${esc(u.phone||'')}"></div>
+    <div class="form-group"><label class="form-label">Data de nascimento</label><input type="date" class="form-input" id="editBirth" value="${u.birthdate||''}"></div>
+    ${imgUploaderHTML({
+      inputId: 'editPhoto',
+      previewId: 'editPhotoPrev',
+      currentSrc: u.photo || '',
+      inputName: 'Foto de perfil',
+      hintText: 'Escolha uma foto da sua galeria',
+      circle: true,
+      placeholderUrl: 'ou cole uma URL da web'
+    })}
+    <div class="form-group"><label class="form-label">Nova senha (deixe em branco)</label><input type="password" class="form-input" id="editPass" placeholder="••••••"></div>
+    <button class="btn btn-primary btn-block" onclick="saveProfile()">Salvar alterações</button>
+  `);
+}
+function saveProfile() {
+  const u = State.user;
+  u.name = document.getElementById('editName').value.trim() || u.name;
+  u.phone = document.getElementById('editPhone').value.trim();
+  u.birthdate = document.getElementById('editBirth').value;
+  u.photo = document.getElementById('editPhoto').value.trim();
+  const np = document.getElementById('editPass').value;
+  if (np) { if (np.length < 6) { toast('Senha muito curta.', 'error'); return; } u.password = np; }
+  DB.save();
+  closeModal();
+  toast('Perfil atualizado.');
+  Router.go('profile');
+}
+
+function doLogout() {
+  if (!confirm('Deseja sair?')) return;
+  State.logout();
+  toast('Você saiu.');
+}
+
+/* ================== NOTIFICATIONS ================== */
+function renderNotifications(main) {
+  if (!State.user) { Router.go('login'); return; }
+  const list = DB.data.notifications.filter(n => n.userId === State.user.id || n.userId === 'all');
+  main.innerHTML = `
+    <div class="page">
+      <div class="row-between mb-3">
+        <h2 class="section-title" style="margin:0;">Notificações</h2>
+        ${list.some(n=>!n.read) ? `<button class="btn btn-ghost btn-sm" onclick="markAllRead()">Marcar todas como lidas</button>` : ''}
+      </div>
+      ${list.length ? list.map(n => `
+        <div class="card" style="${!n.read ? 'border-left:3px solid var(--gold);' : ''}">
+          <div class="row-between mb-2">
+            <div style="font-weight:600;">${esc(n.title)}</div>
+            <span class="muted" style="font-size:11px;">${fmtDate(n.createdAt)}</span>
+          </div>
+          <p class="muted" style="font-size:14px;line-height:1.6;">${esc(n.message)}</p>
+          <span class="badge badge-gold mt-2" style="font-size:10px;">${esc(n.type)}</span>
+        </div>
+      `).join('') : '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg><p>Nenhuma notificação.</p></div>'}
+    </div>
+  `;
+}
+function markAllRead() {
+  DB.data.notifications.forEach(n => { if (n.userId === State.user.id) n.read = true; });
+  DB.save();
+  toast('Notificações marcadas como lidas.');
+  Router.go('notifications');
+}
+
+/* ================== PROMOS ================== */
+function renderPromos(main) {
+  const promos = DB.data.promos;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Promoções</h2>
+      ${promos.length ? promos.map(p => `
+        <div class="card" style="padding:0;overflow:hidden;">
+          ${p.image ? `<div style="height:150px;background:url('${p.image}') center/cover;"></div>` : ''}
+          <div style="padding:16px;">
+            <h3 style="font-size:18px;">${esc(p.title)}</h3>
+            <p class="muted mt-2" style="font-size:13px;">${esc(p.description)}</p>
+            ${p.price ? `<div class="mt-2">${p.originalPrice?`<span class="muted" style="text-decoration:line-through;font-size:13px;">${fmtMoney(p.originalPrice)}</span> `:''}<span class="gold" style="font-weight:700;font-size:18px;">${fmtMoney(p.price)}</span></div>` : ''}
+            ${p.coupon ? `<div class="mt-2"><span class="badge badge-gold">Cupom: ${esc(p.coupon)}</span></div>` : ''}
+            <button class="btn btn-primary btn-sm mt-3" onclick="Router.go('schedule')">Agendar</button>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state"><p>Sem promoções no momento.</p></div>'}
+    </div>
+  `;
+}
+
+/* ================== GALLERY ================== */
+function renderGallery(main) {
+  const cats = ['Todas', ...new Set(DB.data.config.gallery.map(g=>g.category))];
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Galeria</h2>
+      <div class="admin-tabs">
+        ${cats.map((c,i)=>`<button class="admin-tab ${i===0?'active':''}" onclick="filterGallery('${c}',this)">${esc(c)}</button>`).join('')}
+      </div>
+      <div class="gallery-grid" id="galleryGrid">
+        ${DB.data.config.gallery.map(g => `<div class="gallery-item" style="background-image:url('${g.url}')" onclick="viewGalleryImage('${g.url}','${esc(g.title)}')"></div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+function filterGallery(cat, btn) {
+  document.querySelectorAll('.admin-tabs .admin-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const list = cat === 'Todas' ? DB.data.config.gallery : DB.data.config.gallery.filter(g=>g.category===cat);
+  document.getElementById('galleryGrid').innerHTML = list.map(g => `<div class="gallery-item" style="background-image:url('${g.url}')" onclick="viewGalleryImage('${g.url}','${esc(g.title)}')"></div>`).join('');
+}
+function viewGalleryImage(url, title) {
+  openModal(`
+    <div class="modal-header"><h3>${title}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <img src="${url}" style="width:100%;border-radius:12px;">
+  `);
+}
+
+/* ================== CONTACT ================== */
+function renderContact(main) {
+  const c = DB.data.config;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Contato & Localização</h2>
+      <div class="card">
+        <div style="font-family:Playfair Display,serif;font-size:20px;font-weight:600;margin-bottom:6px;">${esc(c.appName)}</div>
+        <p class="muted" style="line-height:1.7;">
+          ${esc(c.address.street)}<br>
+          ${esc(c.address.district)}<br>
+          ${esc(c.address.city)}
+        </p>
+      </div>
+      <div class="card">
+        <div class="row-between mb-2"><span class="muted">Telefone</span><a href="tel:${c.phone.replace(/\D/g,'')}">${esc(c.phone)}</a></div>
+        <div class="row-between mb-2"><span class="muted">E-mail</span><a href="mailto:${c.email}">${esc(c.email)}</a></div>
+        <div class="row-between mb-2"><span class="muted">Instagram</span><a href="https://instagram.com/${c.instagram.replace('@','')}" target="_blank">${esc(c.instagram)}</a></div>
+        ${c.facebook ? `<div class="row-between mb-2"><span class="muted">Facebook</span><a href="https://facebook.com/${c.facebook}" target="_blank">${esc(c.facebook)}</a></div>` : ''}
+        <div class="divider"></div>
+        <div class="muted mb-2" style="font-weight:600;color:var(--gold);">HORÁRIO DE FUNCIONAMENTO</div>
+        <div class="row-between mb-2"><span class="muted">Segunda a Sexta</span><span>${esc(c.hours.weekdays)}</span></div>
+        <div class="row-between mb-2"><span class="muted">Sábado</span><span>${esc(c.hours.saturday)}</span></div>
+        <div class="row-between"><span class="muted">Domingo</span><span>${esc(c.hours.sunday)}</span></div>
+      </div>
+      <div class="row mt-3" style="flex-wrap:wrap;gap:8px;">
+        <a class="btn btn-primary btn-block" target="_blank" href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de informações sobre o STUDIO T CONCEPT.')}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="margin-right:6px;"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.22-1.1a7.94 7.94 0 0 0 11.4-7.12 7.85 7.85 0 0 0-2.02-5.46zM12.05 18.5a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.44-.16-.25a6.6 6.6 0 1 1 5.6 3.1zm3.6-4.93c-.2-.1-1.17-.58-1.35-.65s-.31-.1-.44.1-.5.65-.62.78-.23.15-.43.05a5.42 5.42 0 0 1-2.68-2.34c-.2-.35.2-.32.58-1.08a.42.42 0 0 0 0-.4c-.05-.1-.44-1.07-.6-1.46s-.32-.33-.44-.33h-.37a.72.72 0 0 0-.52.24 2.18 2.18 0 0 0-.68 1.63 3.79 3.79 0 0 0 .8 2.02 8.66 8.66 0 0 0 3.31 2.92c1.99.77 1.99.51 2.35.48a2 2 0 0 0 1.31-.93 1.62 1.62 0 0 0 .11-.93c-.05-.08-.18-.13-.38-.23z"/></svg>
+          WhatsApp
+        </a>
+        <a class="btn btn-outline btn-block" target="_blank" href="${c.address.mapsLink}">Como chegar</a>
+      </div>
+      <div class="card mt-3" style="padding:0;overflow:hidden;">
+        <iframe src="https://www.google.com/maps?q=${encodeURIComponent(c.address.street+', '+c.address.district+', '+c.address.city)}&output=embed" style="width:100%;height:220px;border:0;"></iframe>
+      </div>
+    </div>
+  `;
+}
+
+/* ================== ABOUT ================== */
+function renderAbout(main) {
+  const c = DB.data.config;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Sobre nós</h2>
+      <div class="card"><p style="line-height:1.7;">${esc(c.about)}</p></div>
+      <h2 class="section-title">Termos de uso</h2>
+      <div class="card"><p class="muted" style="line-height:1.6;font-size:13px;">${esc(c.terms)}</p></div>
+      <h2 class="section-title">Política de privacidade</h2>
+      <div class="card"><p class="muted" style="line-height:1.6;font-size:13px;">${esc(c.privacy)}</p></div>
+    </div>
+  `;
+}
+
+/* ================== REVIEWS ================== */
+function renderReviews(main) {
+  const revs = DB.data.reviews.filter(r => !r.hidden);
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Avaliações</h2>
+      ${revs.map(r => `
+        <div class="card">
+          <div class="row-between">
+            <div class="row">
+              <div class="avatar" style="width:40px;height:40px;font-size:14px;background-image:url('${r.userPhoto||''}')">${!r.userPhoto?initials(r.userName):''}</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;">${esc(r.userName)}</div>
+                <div class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+              </div>
+            </div>
+            <span class="muted" style="font-size:11px;">${fmtDate(r.createdAt)}</span>
+          </div>
+          <p style="margin-top:10px;line-height:1.6;font-size:14px;">${esc(r.comment)}</p>
+          ${r.adminReply ? `<div style="margin-top:12px;padding:12px;background:var(--bg-soft);border-radius:10px;font-size:13px;"><span class="gold" style="font-weight:600;">Resposta do salão:</span> ${esc(r.adminReply)}</div>` : ''}
+        </div>
+      `).join('') || '<div class="empty-state"><p>Nenhuma avaliação ainda.</p></div>'}
+    </div>
+  `;
+}
+
+/* ================== PAYMENT ================== */
+function renderPayment(main) {
+  const pix = DB.data.config.pix;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Pagamento</h2>
+      <div class="card">
+        <div class="eyebrow">PIX</div>
+        <div class="row-between mb-2 mt-2"><span class="muted">Chave (${esc(pix.keyType)})</span></div>
+        <div class="card" style="background:var(--bg-soft);text-align:center;padding:14px;">
+          <div style="font-weight:600;word-break:break-all;">${esc(pix.key)}</div>
+          <button class="btn btn-outline btn-sm mt-2" onclick="copyPix('${esc(pix.key)}')">Copiar chave</button>
+        </div>
+        <div class="row-between mb-2 mt-3"><span class="muted">Recebedor</span><span>${esc(pix.receiver)}</span></div>
+        <div class="row-between"><span class="muted">Banco</span><span>${esc(pix.bank)}</span></div>
+        <div class="divider"></div>
+        <div style="text-align:center;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pix.key)}" style="border-radius:12px;background:#fff;padding:8px;">
+        </div>
+        <p class="muted mt-3" style="font-size:13px;line-height:1.6;">${esc(pix.instructions)}</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow mb-2">Outras formas</div>
+        ${DB.data.config.payments.filter(p=>p!=='Pix').map(p => `<div class="row-between mb-2"><span>${esc(p)}</span><span class="badge badge-gold">Aceito</span></div>`).join('')}
+      </div>
+      <button class="btn btn-primary btn-block" onclick="uploadReceipt()">Enviar comprovante</button>
+    </div>
+  `;
+}
+function copyPix(key) {
+  navigator.clipboard.writeText(key).then(() => toast('Chave PIX copiada!')).catch(()=> toast('Não foi possível copiar.', 'error'));
+}
+function uploadReceipt() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.size > 3 * 1024 * 1024) { toast('Arquivo muito grande (máx 3MB).', 'error'); return; }
+    toast('Comprovante enviado! Aguarde a confirmação.', 'success');
+    DB.data.notifications.unshift({ id: uid(), userId: State.user?.id||'all', title: 'Comprovante recebido', message: 'Recebemos seu comprovante. Aguarde a confirmação em até 24h.', type: 'pagamento', read: false, createdAt: Date.now() });
+    DB.save();
+  };
+  input.click();
+}
+
+/* ================== AUTH ================== */
+function renderLogin(main) {
+  main.innerHTML = `
+    <div class="page" style="max-width:420px;margin:0 auto;">
+      <div style="text-align:center;margin:30px 0;">
+        <div style="font-family:Playfair Display,serif;font-size:26px;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;">STUDIO T CONCEPT</div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:22px;margin-bottom:18px;">Entrar</h2>
+        <div class="form-group"><label class="form-label">E-mail</label><input type="email" class="form-input" id="loginEmail" placeholder="seu@email.com"></div>
+        <div class="form-group"><label class="form-label">Senha</label><input type="password" class="form-input" id="loginPass" placeholder="••••••"></div>
+        <button class="btn btn-primary btn-block" onclick="doLogin()">Entrar</button>
+        <button class="btn btn-ghost btn-block mt-2" onclick="forgotPass()">Esqueci minha senha</button>
+      </div>
+      <div class="row-between mt-3" style="align-items:center;">
+        <div style="height:1px;background:var(--border);flex:1;"></div>
+        <span class="muted" style="margin:0 12px;font-size:12px;">OU</span>
+        <div style="height:1px;background:var(--border);flex:1;"></div>
+      </div>
+      <button class="btn btn-outline btn-block mt-3" onclick="socialLogin('Google')">Continuar com Google</button>
+      <button class="btn btn-outline btn-block mt-2" onclick="socialLogin('Apple')">Continuar com Apple</button>
+      <button class="btn btn-outline btn-block mt-2" onclick="socialLogin('WhatsApp')">Continuar com WhatsApp</button>
+      <p class="text-center mt-4 muted">Não tem conta? <a onclick="Router.go('register')">Cadastre-se</a></p>
+      <p class="text-center mt-2 muted" style="font-size:11px;">Admin padrão: admin@studiotconcept.com / admin123</p>
+    </div>
+  `;
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { toast('Preencha todos os campos.', 'error'); return; }
+  const u = DB.data.users.find(x => x.email.toLowerCase() === email && x.password === pass);
+  if (!u) { toast('E-mail ou senha inválidos.', 'error'); return; }
+  if (u.blocked) { toast('Conta bloqueada. Contate o suporte.', 'error'); return; }
+  State.login(u);
+  toast(`Bem-vindo(a), ${u.name.split(' ')[0]}!`);
+  Router.go(u.type === 'admin' ? 'admin' : 'home');
+}
+
+function socialLogin(provider) {
+  toast(`Login ${provider}: em produção, integre com SDK/API real.`, 'info');
+  let u = DB.data.users.find(x => x.email === `${provider.toLowerCase()}@demo.com`);
+  if (!u) {
+    u = { id: uid(), type:'client', name:`Cliente ${provider}`, email:`${provider.toLowerCase()}@demo.com`, password: uid(), phone:'', birthdate:'', photo:'', blocked:false, createdAt: Date.now() };
+    DB.data.users.push(u); DB.save();
+  }
+  State.login(u);
+  Router.go('home');
+}
+
+function forgotPass() {
+  openModal(`
+    <div class="modal-header"><h3>Recuperar senha</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <p class="muted mb-3" style="font-size:13px;">Enviaremos um link de recuperação para seu e-mail ou WhatsApp.</p>
+    <div class="form-group"><label class="form-label">E-mail ou telefone</label><input class="form-input" id="recovInput" placeholder="seu@email.com"></div>
+    <button class="btn btn-primary btn-block" onclick="submitRecovery()">Enviar link</button>
+  `);
+}
+function submitRecovery() {
+  const v = document.getElementById('recovInput').value.trim();
+  if (!v) { toast('Informe e-mail ou telefone.', 'error'); return; }
+  const u = DB.data.users.find(x => x.email.toLowerCase() === v.toLowerCase() || x.phone === v);
+  if (!u) { toast('Nenhuma conta encontrada.', 'error'); return; }
+  const tempPass = 'temp' + Math.floor(1000+Math.random()*9000);
+  u.password = tempPass;
+  DB.save();
+  toast(`Senha temporária: ${tempPass}`, 'success');
+  closeModal();
+}
+
+function renderRegister(main) {
+  main.innerHTML = `
+    <div class="page" style="max-width:420px;margin:0 auto;">
+      <h2 class="section-title">Criar conta</h2>
+      <div class="card">
+        <div class="form-group"><label class="form-label">Nome completo</label><input class="form-input" id="regName"></div>
+        <div class="form-group"><label class="form-label">E-mail</label><input type="email" class="form-input" id="regEmail"></div>
+        <div class="form-group"><label class="form-label">Telefone/WhatsApp</label><input class="form-input" id="regPhone" placeholder="(22) 99999-9999"></div>
+        <div class="form-group"><label class="form-label">Data de nascimento</label><input type="date" class="form-input" id="regBirth"></div>
+        <div class="form-group"><label class="form-label">CPF (opcional)</label><input class="form-input" id="regCpf"></div>
+        <div class="form-group"><label class="form-label">Senha</label><input type="password" class="form-input" id="regPass"></div>
+        ${imgUploaderHTML({
+          inputId: 'regPhoto',
+          previewId: 'regPhotoPrev',
+          currentSrc: '',
+          inputName: 'Foto de perfil (opcional)',
+          hintText: 'Escolha uma foto da sua galeria',
+          circle: true,
+          placeholderUrl: 'ou cole uma URL da web'
+        })}
+        <button class="btn btn-primary btn-block" onclick="doRegister()">Criar conta</button>
+        <p class="text-center mt-3 muted">Já tem conta? <a onclick="Router.go('login')">Entrar</a></p>
+      </div>
+    </div>
+  `;
+}
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const birthdate = document.getElementById('regBirth').value;
+  const cpf = document.getElementById('regCpf').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const photo = document.getElementById('regPhoto').value.trim();
+  if (!name || !email || !pass) { toast('Preencha nome, e-mail e senha.', 'error'); return; }
+  if (pass.length < 6) { toast('Senha deve ter ao menos 6 caracteres.', 'error'); return; }
+  if (DB.data.users.find(x => x.email.toLowerCase() === email.toLowerCase())) { toast('E-mail já cadastrado.', 'error'); return; }
+  const u = { id: uid(), type:'client', name, email, phone, birthdate, cpf, photo, password: pass, blocked:false, createdAt: Date.now() };
+  DB.data.users.push(u); DB.save();
+  State.login(u);
+  toast('Conta criada com sucesso!');
+  Router.go('home');
+}
+
+/* ==========================================================================
+   ÁREA ADMIN
+   ========================================================================== */
+function renderAdminDashboard(main) {
+  const appts = DB.data.appointments;
+  const today = todayISO();
+  const todays = appts.filter(a => a.date === today && a.status !== 'cancelled');
+  const upcoming = appts.filter(a => a.date >= today && ['confirmed','pending','rescheduled'].includes(a.status));
+  const cancelled = appts.filter(a => a.status === 'cancelled');
+  const clients = DB.data.users.filter(u => u.type === 'client');
+  const paidPayments = DB.data.payments.filter(p => p.status === 'pago');
+  const pendingPayments = DB.data.payments.filter(p => p.status === 'pendente');
+  const revenue = paidPayments.reduce((s,p) => s + Number(p.amount||0), 0);
+  const birthdaysMonth = clients.filter(c => c.birthdate && new Date(c.birthdate).getMonth() === new Date().getMonth());
+
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Painel Administrativo</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="Router.go('admin')">Dashboard</button>
+        <button class="admin-tab" onclick="Router.go('admin-appointments')">Agendamentos</button>
+        <button class="admin-tab" onclick="Router.go('admin-clients')">Clientes</button>
+        <button class="admin-tab" onclick="Router.go('admin-services')">Serviços</button>
+        <button class="admin-tab" onclick="Router.go('admin-professionals')">Profissionais</button>
+        <button class="admin-tab" onclick="Router.go('admin-payments')">Pagamentos</button>
+        <button class="admin-tab" onclick="Router.go('admin-promos')">Promoções</button>
+        <button class="admin-tab" onclick="Router.go('admin-coupons')">Cupons</button>
+        <button class="admin-tab" onclick="Router.go('admin-birthdays')">Aniversários</button>
+        <button class="admin-tab" onclick="Router.go('admin-notifications')">Notificações</button>
+        <button class="admin-tab" onclick="Router.go('admin-reviews')">Avaliações</button>
+        <button class="admin-tab" onclick="Router.go('admin-content')">Conteúdo</button>
+        <button class="admin-tab" onclick="Router.go('admin-settings')">Configurações</button>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-label">Hoje</div><div class="stat-value">${todays.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">⏭️</div><div class="stat-label">Próximos</div><div class="stat-value">${upcoming.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">Clientes</div><div class="stat-value">${clients.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-label">Faturamento</div><div class="stat-value">${fmtMoney(revenue)}</div></div>
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-label">Pgtos Pendentes</div><div class="stat-value">${pendingPayments.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-label">Pgtos Confirmados</div><div class="stat-value">${paidPayments.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">🎂</div><div class="stat-label">Aniversariantes</div><div class="stat-value">${birthdaysMonth.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">✖️</div><div class="stat-label">Cancelados</div><div class="stat-value">${cancelled.length}</div></div>
+      </div>
+
+      <h2 class="section-title mt-4">Agendamentos de Hoje</h2>
+      ${todays.length ? todays.map(a => `
+        <div class="card">
+          <div class="row-between mb-2">
+            <div><div style="font-weight:600;">${a.time} — ${esc(a.serviceName)}</div><div class="muted" style="font-size:12px;">${esc(a.userName)} • ${esc(a.professionalName)}</div></div>
+            <span class="badge badge-gold">${fmtMoney(a.price)}</span>
+          </div>
+        </div>
+      `).join('') : '<div class="card"><p class="muted">Sem agendamentos hoje.</p></div>'}
+
+      <h2 class="section-title">Serviços mais agendados</h2>
+      <div class="card">
+        ${topServices().map(t => `
+          <div class="mb-3">
+            <div class="row-between mb-2"><span>${esc(t.name)}</span><span class="gold" style="font-weight:600;">${t.count}</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${(t.count/Math.max(1,topServices()[0]?.count||1))*100}%"></div></div>
+          </div>
+        `).join('') || '<p class="muted">Sem dados.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function topServices() {
+  const counts = {};
+  DB.data.appointments.forEach(a => { counts[a.serviceName] = (counts[a.serviceName]||0) + 1; });
+  return Object.entries(counts).map(([name,count]) => ({name,count})).sort((a,b)=>b.count-a.count).slice(0,5);
+}
+
+/* ===== ADMIN: Appointment list ===== */
+function renderAdminAppointments(main) {
+  const list = DB.data.appointments;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Agendamentos (${list.length})</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Data</th><th>Cliente</th><th>Serviço</th><th>Profissional</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
+          <tbody>
+            ${list.map(a => `
+              <tr>
+                <td>${fmtDate(a.date)} ${a.time}</td>
+                <td>${esc(a.userName)}</td>
+                <td>${esc(a.serviceName)}</td>
+                <td>${esc(a.professionalName)}</td>
+                <td>${fmtMoney(a.price)}</td>
+                <td><span class="badge ${a.status==='confirmed'?'badge-success':a.status==='cancelled'?'badge-danger':'badge-info'}">${a.status}</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" onclick="adminChangeStatus('${a.id}','completed')">Concluir</button>
+                  <button class="btn btn-ghost btn-sm" onclick="adminChangeStatus('${a.id}','cancelled')">Cancelar</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="7" class="text-center muted">Nenhum agendamento.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function adminChangeStatus(id, status) {
+  const a = DB.data.appointments.find(x=>x.id===id);
+  if (!a) return;
+  a.status = status;
+  DB.save();
+  toast('Status atualizado.');
+  Router.go('admin-appointments');
+}
+
+/* ===== ADMIN: Clients ===== */
+function renderAdminClients(main) {
+  const list = DB.data.users.filter(u => u.type === 'client');
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Clientes (${list.length})</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Nasc.</th><th>Status</th><th>Ações</th></tr></thead>
+          <tbody>
+            ${list.map(u => `
+              <tr>
+                <td>${esc(u.name)}</td>
+                <td>${esc(u.email)}</td>
+                <td>${esc(u.phone||'-')}</td>
+                <td>${u.birthdate?fmtDate(u.birthdate):'-'}</td>
+                <td>${u.blocked ? '<span class="badge badge-danger">Bloqueado</span>' : '<span class="badge badge-success">Ativo</span>'}</td>
+                <td><button class="btn btn-ghost btn-sm" onclick="toggleBlock('${u.id}')">${u.blocked?'Desbloquear':'Bloquear'}</button></td>
+              </tr>
+            `).join('') || '<tr><td colspan="6" class="text-center muted">Nenhum cliente.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function toggleBlock(id) {
+  const u = DB.data.users.find(x=>x.id===id);
+  if (!u) return;
+  u.blocked = !u.blocked;
+  DB.save();
+  toast(u.blocked?'Cliente bloqueado.':'Cliente desbloqueado.');
+  Router.go('admin-clients');
+}
+
+/* ===== ADMIN: Services ===== */
+function renderAdminServices(main) {
+  main.innerHTML = `
+    <div class="page">
+      <div class="row-between mb-3">
+        <h2 class="section-title" style="margin:0;">Serviços</h2>
+        <button class="btn btn-primary btn-sm" onclick="editService()">+ Novo</button>
+      </div>
+      ${DB.data.services.map(s => `
+        <div class="card">
+          <div class="card-row">
+            <div class="thumb" style="background-image:url('${s.image}')"></div>
+            <div class="flex-1">
+              <div style="font-weight:600;">${esc(s.name)}</div>
+              <div class="muted" style="font-size:12px;">${esc(s.category)} • ${s.duration} min • ${fmtMoney(s.promo>0?s.promo:s.price)}</div>
+              ${!s.active ? '<span class="badge badge-danger mt-2">Inativo</span>' : ''}
+            </div>
+          </div>
+          <div class="row mt-3">
+            <button class="btn btn-outline btn-sm" onclick="editService('${s.id}')">Editar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleService('${s.id}')">${s.active?'Ocultar':'Mostrar'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')">Excluir</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function editService(id) {
+  const s = id ? DB.data.services.find(x=>x.id===id) : { name:'', category: DB.data.categories[0], description:'', duration:60, price:0, promo:0, image:'', active:true, professionals:[] };
+  openModal(`
+    <div class="modal-header"><h3>${id?'Editar':'Novo'} serviço</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="svcName" value="${esc(s.name)}"></div>
+    <div class="form-group"><label class="form-label">Categoria</label>
+      <select class="form-select" id="svcCat">${DB.data.categories.map(c=>`<option ${s.category===c?'selected':''}>${esc(c)}</option>`).join('')}</select>
+    </div>
+    <div class="form-group"><label class="form-label">Descrição</label><textarea class="form-textarea" id="svcDesc">${esc(s.description)}</textarea></div>
+    <div class="form-group"><label class="form-label">Duração (min)</label><input type="number" class="form-input" id="svcDur" value="${s.duration}"></div>
+    <div class="form-group"><label class="form-label">Preço</label><input type="number" step="0.01" class="form-input" id="svcPrice" value="${s.price}"></div>
+    <div class="form-group"><label class="form-label">Preço promocional (0 = sem)</label><input type="number" step="0.01" class="form-input" id="svcPromo" value="${s.promo}"></div>
+    ${imgUploaderHTML({
+      inputId: 'svcImg',
+      previewId: 'svcImgPrev',
+      currentSrc: s.image || '',
+      inputName: 'Foto do serviço',
+      hintText: 'JPG, PNG. Máx 3MB',
+      circle: false,
+      placeholderUrl: 'ou cole uma URL da web'
+    })}
+    <button class="btn btn-primary btn-block" onclick="saveService('${id||''}')">Salvar</button>
+  `);
+}
+function saveService(id) {
+  const data = {
+    name: document.getElementById('svcName').value.trim(),
+    category: document.getElementById('svcCat').value,
+    description: document.getElementById('svcDesc').value.trim(),
+    duration: Number(document.getElementById('svcDur').value)||60,
+    price: Number(document.getElementById('svcPrice').value)||0,
+    promo: Number(document.getElementById('svcPromo').value)||0,
+    image: document.getElementById('svcImg').value.trim() || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
+  };
+  if (!data.name) { toast('Informe o nome.', 'error'); return; }
+  if (id) { Object.assign(DB.data.services.find(x=>x.id===id), data); }
+  else { DB.data.services.push({ id: uid(), active:true, professionals:[], ...data }); }
+  DB.save();
+  closeModal();
+  toast('Serviço salvo.');
+  Router.go('admin-services');
+}
+function toggleService(id) {
+  const s = DB.data.services.find(x=>x.id===id);
+  s.active = !s.active; DB.save(); Router.go('admin-services');
+}
+function deleteService(id) {
+  if (!confirm('Excluir este serviço?')) return;
+  DB.data.services = DB.data.services.filter(x=>x.id!==id);
+  DB.save(); toast('Serviço excluído.'); Router.go('admin-services');
+}
+
+/* ===== ADMIN: Professionals ===== */
+function renderAdminProfessionals(main) {
+  main.innerHTML = `
+    <div class="page">
+      <div class="row-between mb-3">
+        <h2 class="section-title" style="margin:0;">Profissionais</h2>
+        <button class="btn btn-primary btn-sm" onclick="editPro()">+ Novo</button>
+      </div>
+      ${DB.data.professionals.map(p => `
+        <div class="card">
+          <div class="card-row">
+            <div class="avatar" style="background-image:url('${p.photo}')"></div>
+            <div class="flex-1">
+              <div style="font-weight:600;">${esc(p.name)}</div>
+              <div class="muted" style="font-size:12px;">${esc(p.role)}</div>
+              <div class="muted mt-2" style="font-size:11px;">${esc(p.specialties)}</div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <button class="btn btn-outline btn-sm" onclick="editPro('${p.id}')">Editar</button>
+            <button class="btn btn-ghost btn-sm" onclick="togglePro('${p.id}')">${p.active?'Ocultar':'Mostrar'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deletePro('${p.id}')">Excluir</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function editPro(id) {
+  const p = id ? DB.data.professionals.find(x=>x.id===id) : { name:'', role:'', specialties:'', bio:'', photo:'', schedule:'09:00 - 19:00', days:[1,2,3,4,5], instagram:'', active:true };
+  openModal(`
+    <div class="modal-header"><h3>${id?'Editar':'Novo'} profissional</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="proName" value="${esc(p.name)}"></div>
+    <div class="form-group"><label class="form-label">Cargo</label><input class="form-input" id="proRole" value="${esc(p.role)}"></div>
+    <div class="form-group"><label class="form-label">Especialidades</label><input class="form-input" id="proSpec" value="${esc(p.specialties)}"></div>
+    <div class="form-group"><label class="form-label">Biografia</label><textarea class="form-textarea" id="proBio">${esc(p.bio)}</textarea></div>
+    <div class="form-group"><label class="form-label">Horário</label><input class="form-input" id="proSched" value="${esc(p.schedule)}"></div>
+    <div class="form-group"><label class="form-label">Instagram</label><input class="form-input" id="proInsta" value="${esc(p.instagram||'')}"></div>
+    ${imgUploaderHTML({
+      inputId: 'proPhoto',
+      previewId: 'proPhotoPrev',
+      currentSrc: p.photo || '',
+      inputName: 'Foto do profissional',
+      hintText: 'Escolha uma foto da galeria',
+      circle: true,
+      placeholderUrl: 'ou cole uma URL da web'
+    })}
+    <button class="btn btn-primary btn-block" onclick="savePro('${id||''}')">Salvar</button>
+  `);
+}
+function savePro(id) {
+  const data = {
+    name: document.getElementById('proName').value.trim(),
+    role: document.getElementById('proRole').value.trim(),
+    specialties: document.getElementById('proSpec').value.trim(),
+    bio: document.getElementById('proBio').value.trim(),
+    schedule: document.getElementById('proSched').value.trim(),
+    instagram: document.getElementById('proInsta').value.trim(),
+    photo: document.getElementById('proPhoto').value.trim() || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300',
+  };
+  if (!data.name) { toast('Informe o nome.', 'error'); return; }
+  if (id) { Object.assign(DB.data.professionals.find(x=>x.id===id), data); }
+  else { DB.data.professionals.push({ id: uid(), active:true, days:[1,2,3,4,5], ...data }); }
+  DB.save(); closeModal(); toast('Profissional salvo.'); Router.go('admin-professionals');
+}
+function togglePro(id) { const p = DB.data.professionals.find(x=>x.id===id); p.active = !p.active; DB.save(); Router.go('admin-professionals'); }
+function deletePro(id) { if (!confirm('Excluir?')) return; DB.data.professionals = DB.data.professionals.filter(x=>x.id!==id); DB.save(); Router.go('admin-professionals'); }
+
+/* ===== ADMIN: Payments ===== */
+function renderAdminPayments(main) {
+  const list = DB.data.payments;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Pagamentos (${list.length})</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Data</th><th>Cliente</th><th>Valor</th><th>Método</th><th>Status</th><th>Ações</th></tr></thead>
+          <tbody>
+            ${list.map(p => `
+              <tr>
+                <td>${fmtDate(p.createdAt)}</td>
+                <td>${esc(p.userName)}</td>
+                <td>${fmtMoney(p.amount)}</td>
+                <td>${esc(p.method)}</td>
+                <td><span class="badge ${p.status==='pago'?'badge-success':p.status==='pendente'?'badge-warning':'badge-info'}">${p.status}</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" onclick="setPaymentStatus('${p.id}','pago')">Pago</button>
+                  <button class="btn btn-ghost btn-sm" onclick="setPaymentStatus('${p.id}','cancelado')">Cancelar</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="6" class="text-center muted">Nenhum pagamento.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function setPaymentStatus(id, status) { const p = DB.data.payments.find(x=>x.id===id); p.status = status; DB.save(); toast('Status atualizado.'); Router.go('admin-payments'); }
+
+/* ===== ADMIN: Promos ===== */
+function renderAdminPromos(main) {
+  main.innerHTML = `
+    <div class="page">
+      <div class="row-between mb-3">
+        <h2 class="section-title" style="margin:0;">Promoções</h2>
+        <button class="btn btn-primary btn-sm" onclick="editPromo()">+ Nova</button>
+      </div>
+      ${DB.data.promos.map(p => `
+        <div class="card">
+          <div class="row-between mb-2"><div style="font-weight:600;">${esc(p.title)}</div><button class="btn btn-danger btn-sm" onclick="deletePromo('${p.id}')">Excluir</button></div>
+          ${p.image ? `<div style="height:120px;border-radius:10px;background:url('${p.image}') center/cover;margin:8px 0;"></div>` : ''}
+          <p class="muted" style="font-size:13px;">${esc(p.description)}</p>
+          ${p.price ? `<div class="gold mt-2" style="font-weight:600;">${fmtMoney(p.price)}</div>` : ''}
+          <button class="btn btn-outline btn-sm mt-3" onclick="editPromo('${p.id}')">Editar</button>
+        </div>
+      `).join('') || '<div class="card"><p class="muted">Nenhuma promoção.</p></div>'}
+    </div>
+  `;
+}
+function editPromo(id) {
+  const p = id ? DB.data.promos.find(x=>x.id===id) : { title:'', description:'', image:'', price:0, originalPrice:0, coupon:'', action:'' };
+  openModal(`
+    <div class="modal-header"><h3>${id?'Editar':'Nova'} promoção</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="promTitle" value="${esc(p.title)}"></div>
+    <div class="form-group"><label class="form-label">Descrição</label><textarea class="form-textarea" id="promDesc">${esc(p.description)}</textarea></div>
+    <div class="form-group"><label class="form-label">Preço promo</label><input type="number" class="form-input" id="promPrice" value="${p.price||0}"></div>
+    <div class="form-group"><label class="form-label">Preço original</label><input type="number" class="form-input" id="promOrig" value="${p.originalPrice||0}"></div>
+    ${imgUploaderHTML({
+      inputId: 'promImg',
+      previewId: 'promImgPrev',
+      currentSrc: p.image || '',
+      inputName: 'Imagem da promoção',
+      hintText: 'JPG, PNG. Máx 3MB',
+      circle: false,
+      placeholderUrl: 'ou cole uma URL da web'
+    })}
+    <div class="form-group"><label class="form-label">Cupom</label><input class="form-input" id="promCoupon" value="${esc(p.coupon||'')}"></div>
+    <button class="btn btn-primary btn-block" onclick="savePromo('${id||''}')">Salvar</button>
+  `);
+}
+function savePromo(id) {
+  const data = {
+    title: document.getElementById('promTitle').value.trim(),
+    description: document.getElementById('promDesc').value.trim(),
+    price: Number(document.getElementById('promPrice').value)||0,
+    originalPrice: Number(document.getElementById('promOrig').value)||0,
+    image: document.getElementById('promImg').value.trim(),
+    coupon: document.getElementById('promCoupon').value.trim(),
+  };
+  if (!data.title) { toast('Informe título.', 'error'); return; }
+  if (id) Object.assign(DB.data.promos.find(x=>x.id===id), data);
+  else DB.data.promos.push({ id: uid(), ...data });
+  DB.save(); closeModal(); toast('Promoção salva.'); Router.go('admin-promos');
+}
+function deletePromo(id) { if(!confirm('Excluir?'))return; DB.data.promos = DB.data.promos.filter(x=>x.id!==id); DB.save(); Router.go('admin-promos'); }
+
+/* ===== ADMIN: Coupons ===== */
+function renderAdminCoupons(main) {
+  main.innerHTML = `
+    <div class="page">
+      <div class="row-between mb-3">
+        <h2 class="section-title" style="margin:0;">Cupons</h2>
+        <button class="btn btn-primary btn-sm" onclick="editCoupon()">+ Novo</button>
+      </div>
+      ${DB.data.coupons.map(c => `
+        <div class="card">
+          <div class="row-between mb-2">
+            <div class="gold" style="font-family:Playfair Display,serif;font-weight:700;font-size:18px;">${esc(c.code)}</div>
+            <span class="badge badge-gold">${c.discount}%</span>
+          </div>
+          <p class="muted" style="font-size:13px;">${esc(c.description)}</p>
+          <div class="row mt-3">
+            <button class="btn btn-outline btn-sm" onclick="editCoupon('${c.id}')">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCoupon('${c.id}')">Excluir</button>
+          </div>
+        </div>
+      `).join('') || '<div class="card"><p class="muted">Nenhum cupom.</p></div>'}
+    </div>
+  `;
+}
+function editCoupon(id) {
+  const c = id ? DB.data.coupons.find(x=>x.id===id) : { code:'', discount:10, description:'' };
+  openModal(`
+    <div class="modal-header"><h3>${id?'Editar':'Novo'} cupom</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Código</label><input class="form-input" id="cpCode" value="${esc(c.code)}" placeholder="EX: PROMO20"></div>
+    <div class="form-group"><label class="form-label">Desconto (%)</label><input type="number" class="form-input" id="cpDisc" value="${c.discount}"></div>
+    <div class="form-group"><label class="form-label">Descrição</label><textarea class="form-textarea" id="cpDesc">${esc(c.description)}</textarea></div>
+    <button class="btn btn-primary btn-block" onclick="saveCoupon('${id||''}')">Salvar</button>
+  `);
+}
+function saveCoupon(id) {
+  const data = { code: document.getElementById('cpCode').value.trim().toUpperCase(), discount: Number(document.getElementById('cpDisc').value)||0, description: document.getElementById('cpDesc').value.trim() };
+  if (!data.code) { toast('Informe código.', 'error'); return; }
+  if (id) Object.assign(DB.data.coupons.find(x=>x.id===id), data);
+  else DB.data.coupons.push({ id: uid(), ...data });
+  DB.save(); closeModal(); toast('Cupom salvo.'); Router.go('admin-coupons');
+}
+function deleteCoupon(id) { if(!confirm('Excluir?'))return; DB.data.coupons = DB.data.coupons.filter(x=>x.id!==id); DB.save(); Router.go('admin-coupons'); }
+
+/* ===== ADMIN: Birthdays ===== */
+function renderAdminBirthdays(main) {
+  const clients = DB.data.users.filter(u => u.type === 'client' && u.birthdate);
+  const today = new Date();
+  const monthNow = today.getMonth();
+  const listThisMonth = clients.filter(c => new Date(c.birthdate).getMonth() === monthNow)
+    .sort((a,b) => new Date(a.birthdate).getDate() - new Date(b.birthdate).getDate());
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Aniversariantes do Mês</h2>
+      <div class="card">
+        <div class="row-between mb-2"><span class="muted">Cupom automático</span><span>${esc(DB.data.config.birthday.coupon)}</span></div>
+        <div class="row-between mb-2"><span class="muted">Desconto</span><span class="gold">${DB.data.config.birthday.discount}%</span></div>
+        <div class="row-between mb-2"><span class="muted">Validade</span><span>${DB.data.config.birthday.validDays} dias</span></div>
+        <button class="btn btn-outline btn-sm mt-2" onclick="Router.go('admin-settings')">Configurar</button>
+      </div>
+      ${listThisMonth.length ? listThisMonth.map(c => {
+        const d = new Date(c.birthdate);
+        return `
+          <div class="card">
+            <div class="row-between">
+              <div>
+                <div style="font-weight:600;">${esc(c.name)}</div>
+                <div class="muted" style="font-size:12px;">${esc(c.phone||c.email)}</div>
+              </div>
+              <div class="badge badge-gold">🎂 ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}</div>
+            </div>
+          </div>
+        `;
+      }).join('') : '<div class="card"><p class="muted">Nenhum aniversariante neste mês.</p></div>'}
+    </div>
+  `;
+}
+
+/* ===== ADMIN: Notifications ===== */
+function renderAdminNotifications(main) {
+  main.innerHTML = `
+    <div class="page">
+      <div class="row-between mb-3">
+        <h2 class="section-title" style="margin:0;">Notificações</h2>
+        <button class="btn btn-primary btn-sm" onclick="editNotification()">+ Enviar</button>
+      </div>
+      ${DB.data.notifications.slice(0,50).map(n => `
+        <div class="card">
+          <div class="row-between mb-2"><div style="font-weight:600;">${esc(n.title)}</div><span class="muted" style="font-size:11px;">${fmtDate(n.createdAt)}</span></div>
+          <p class="muted" style="font-size:13px;">${esc(n.message)}</p>
+          <span class="badge badge-gold mt-2" style="font-size:10px;">${esc(n.type)}</span>
+        </div>
+      `).join('') || '<div class="card"><p class="muted">Sem notificações.</p></div>'}
+    </div>
+  `;
+}
+function editNotification() {
+  openModal(`
+    <div class="modal-header"><h3>Nova notificação</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Público</label>
+      <select class="form-select" id="notifTarget"><option value="all">Todos os clientes</option></select>
+    </div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="notifTitle"></div>
+    <div class="form-group"><label class="form-label">Mensagem</label><textarea class="form-textarea" id="notifMsg"></textarea></div>
+    <div class="form-group"><label class="form-label">Tipo</label>
+      <select class="form-select" id="notifType">
+        <option>promocao</option><option>aviso</option><option>cupom</option><option>lembrete</option><option>aniversario</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="sendNotification()">Enviar</button>
+  `);
+}
+function sendNotification() {
+  const title = document.getElementById('notifTitle').value.trim();
+  const message = document.getElementById('notifMsg').value.trim();
+  const type = document.getElementById('notifType').value;
+  if (!title || !message) { toast('Preencha título e mensagem.', 'error'); return; }
+  DB.data.notifications.unshift({ id: uid(), userId: 'all', title, message, type, read: false, createdAt: Date.now() });
+  DB.save(); closeModal(); toast('Notificação enviada.'); Router.go('admin-notifications');
+}
+
+/* ===== ADMIN: Reviews ===== */
+function renderAdminReviews(main) {
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Avaliações</h2>
+      ${DB.data.reviews.map(r => `
+        <div class="card">
+          <div class="row-between mb-2">
+            <div class="row">
+              <div><div style="font-weight:600;">${esc(r.userName)}</div><div class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div></div>
+            </div>
+            <span class="muted" style="font-size:11px;">${fmtDate(r.createdAt)}</span>
+          </div>
+          <p style="margin-top:8px;font-size:14px;">${esc(r.comment)}</p>
+          ${r.adminReply ? `<div style="margin-top:10px;padding:10px;background:var(--bg-soft);border-radius:8px;font-size:13px;"><span class="gold">Resposta:</span> ${esc(r.adminReply)}</div>` : ''}
+          <div class="row mt-3">
+            <button class="btn btn-outline btn-sm" onclick="replyReview('${r.id}')">Responder</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleHideReview('${r.id}')">${r.hidden?'Mostrar':'Ocultar'}</button>
+            <button class="btn btn-ghost btn-sm" onclick="featureReview('${r.id}')">${r.featured?'Remover destaque':'Destacar'}</button>
+          </div>
+        </div>
+      `).join('') || '<div class="card"><p class="muted">Sem avaliações.</p></div>'}
+    </div>
+  `;
+}
+function replyReview(id) {
+  const r = DB.data.reviews.find(x=>x.id===id);
+  const reply = prompt('Resposta:', r.adminReply||'');
+  if (reply === null) return;
+  r.adminReply = reply.trim();
+  DB.save(); toast('Resposta salva.'); Router.go('admin-reviews');
+}
+function toggleHideReview(id) { const r = DB.data.reviews.find(x=>x.id===id); r.hidden = !r.hidden; DB.save(); Router.go('admin-reviews'); }
+function featureReview(id) { const r = DB.data.reviews.find(x=>x.id===id); r.featured = !r.featured; DB.save(); Router.go('admin-reviews'); }
+
+/* ===== ADMIN: Content (Banners, About, Gallery) ===== */
+function renderAdminContent(main) {
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Conteúdo</h2>
+      <div class="card">
+        <div class="row-between mb-3"><div style="font-weight:600;">Banners da Home</div><button class="btn btn-primary btn-sm" onclick="editBanner()">+ Novo</button></div>
+        ${DB.data.config.banners.map(b => `
+          <div class="card mb-2" style="padding:10px;">
+            <div class="card-row">
+              <div class="thumb" style="background-image:url('${b.image}');width:60px;height:60px;"></div>
+              <div class="flex-1"><div style="font-weight:600;font-size:14px;">${esc(b.title)}</div><div class="muted" style="font-size:12px;">${esc(b.subtitle)}</div></div>
+            </div>
+            <div class="row mt-2">
+              <button class="btn btn-outline btn-sm" onclick="editBanner('${b.id}')">Editar</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteBanner('${b.id}')">Excluir</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="card">
+        <div class="row-between mb-3"><div style="font-weight:600;">Galeria</div><button class="btn btn-primary btn-sm" onclick="editGalleryItem()">+ Nova da galeria</button></div>
+        <div class="gallery-grid">
+          ${DB.data.config.gallery.map(g => `
+            <div style="position:relative;">
+              <div class="gallery-item" style="background-image:url('${g.url}')"></div>
+              <button class="btn btn-danger btn-sm" style="position:absolute;top:6px;right:6px;padding:4px 8px;font-size:10px;" onclick="deleteGalleryItem('${g.id}')">×</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="row-between mb-3"><div style="font-weight:600;">Texto "Sobre nós"</div></div>
+        <textarea class="form-textarea" id="aboutText">${esc(DB.data.config.about)}</textarea>
+        <button class="btn btn-primary btn-sm mt-3" onclick="saveAbout()">Salvar</button>
+      </div>
+    </div>
+  `;
+}
+function saveAbout() { DB.data.config.about = document.getElementById('aboutText').value; DB.save(); toast('Texto salvo.'); }
+function editBanner(id) {
+  const b = id ? DB.data.config.banners.find(x=>x.id===id) : { title:'', subtitle:'', image:'', active:true };
+  openModal(`
+    <div class="modal-header"><h3>${id?'Editar':'Novo'} banner</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="bnTitle" value="${esc(b.title)}"></div>
+    <div class="form-group"><label class="form-label">Subtítulo</label><input class="form-input" id="bnSub" value="${esc(b.subtitle)}"></div>
+    ${imgUploaderHTML({
+      inputId: 'bnImg',
+      previewId: 'bnImgPrev',
+      currentSrc: b.image || '',
+      inputName: 'Imagem do banner',
+      hintText: 'JPG, PNG. Máx 3MB',
+      circle: false,
+      placeholderUrl: 'ou cole uma URL da web'
+    })}
+    <button class="btn btn-primary btn-block" onclick="saveBanner('${id||''}')">Salvar</button>
+  `);
+}
+function saveBanner(id) {
+  const data = { title: document.getElementById('bnTitle').value.trim(), subtitle: document.getElementById('bnSub').value.trim(), image: document.getElementById('bnImg').value.trim() };
+  if (!data.title || !data.image) { toast('Preencha título e imagem.', 'error'); return; }
+  if (id) Object.assign(DB.data.config.banners.find(x=>x.id===id), data);
+  else DB.data.config.banners.push({ id: uid(), active:true, ...data });
+  DB.save(); closeModal(); toast('Banner salvo.'); Router.go('admin-content');
+}
+function deleteBanner(id) { if(!confirm('Excluir?'))return; DB.data.config.banners = DB.data.config.banners.filter(x=>x.id!==id); DB.save(); Router.go('admin-content'); }
+function editGalleryItem(id) {
+  const g = id ? DB.data.config.gallery.find(x=>x.id===id) : { url:'', category:'', title:'' };
+  openModal(`
+    <div class="modal-header"><h3>${id?'Editar':'Nova'} imagem</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gTitle" value="${esc(g.title)}"></div>
+    <div class="form-group"><label class="form-label">Categoria</label><input class="form-input" id="gCat" value="${esc(g.category)}"></div>
+    ${imgUploaderHTML({
+      inputId: 'gUrl',
+      previewId: 'gUrlPrev',
+      currentSrc: g.url || '',
+      inputName: 'Foto da galeria',
+      hintText: 'JPG, PNG. Máx 3MB',
+      circle: false,
+      placeholderUrl: 'ou cole uma URL da web'
+    })}
+    <button class="btn btn-primary btn-block" onclick="saveGalleryItem('${id||''}')">Salvar</button>
+  `);
+}
+function saveGalleryItem(id) {
+  const data = { title: document.getElementById('gTitle').value.trim(), category: document.getElementById('gCat').value.trim(), url: document.getElementById('gUrl').value.trim() };
+  if (!data.url) { toast('Informe a imagem.', 'error'); return; }
+  if (id) Object.assign(DB.data.config.gallery.find(x=>x.id===id), data);
+  else DB.data.config.gallery.push({ id: uid(), ...data });
+  DB.save(); closeModal(); toast('Imagem salva.'); Router.go('admin-content');
+}
+function deleteGalleryItem(id) { if(!confirm('Excluir?'))return; DB.data.config.gallery = DB.data.config.gallery.filter(x=>x.id!==id); DB.save(); Router.go('admin-content'); }
+
+/* ===== ADMIN: Settings ===== */
+function renderAdminSettings(main) {
+  const c = DB.data.config;
+  main.innerHTML = `
+    <div class="page">
+      <h2 class="section-title">Configurações</h2>
+
+      <div class="card">
+        <div class="eyebrow">Identidade</div>
+        <div class="form-group"><label class="form-label">Nome do app</label><input class="form-input" id="setAppName" value="${esc(c.appName)}"></div>
+        ${imgUploaderHTML({
+          inputId: 'setLogo',
+          previewId: 'setLogoPrev',
+          currentSrc: c.logo || '',
+          inputName: 'Logo do salão',
+          hintText: 'Recomendado PNG com fundo transparente',
+          circle: false,
+          placeholderUrl: 'ou cole uma URL da web'
+        })}
+        <button class="btn btn-primary btn-sm mt-2" onclick="saveIdentity()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Contato</div>
+        <div class="form-group"><label class="form-label">Telefone</label><input class="form-input" id="setPhone" value="${esc(c.phone)}"></div>
+        <div class="form-group"><label class="form-label">WhatsApp (só números)</label><input class="form-input" id="setWhats" value="${esc(c.whatsapp)}"></div>
+        <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="setEmail" value="${esc(c.email)}"></div>
+        <div class="form-group"><label class="form-label">Instagram</label><input class="form-input" id="setInsta" value="${esc(c.instagram)}"></div>
+        <div class="form-group"><label class="form-label">Facebook</label><input class="form-input" id="setFace" value="${esc(c.facebook||'')}"></div>
+        <div class="form-group"><label class="form-label">Site</label><input class="form-input" id="setSite" value="${esc(c.website||'')}"></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="saveContact()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Endereço</div>
+        <div class="form-group"><label class="form-label">Rua e número</label><input class="form-input" id="setStreet" value="${esc(c.address.street)}"></div>
+        <div class="form-group"><label class="form-label">Bairro</label><input class="form-input" id="setDist" value="${esc(c.address.district)}"></div>
+        <div class="form-group"><label class="form-label">Cidade</label><input class="form-input" id="setCity" value="${esc(c.address.city)}"></div>
+        <div class="form-group"><label class="form-label">Link Google Maps</label><input class="form-input" id="setMaps" value="${esc(c.address.mapsLink)}"></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="saveAddress()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Horários</div>
+        <div class="form-group"><label class="form-label">Segunda a Sexta</label><input class="form-input" id="setWeek" value="${esc(c.hours.weekdays)}"></div>
+        <div class="form-group"><label class="form-label">Sábado</label><input class="form-input" id="setSat" value="${esc(c.hours.saturday)}"></div>
+        <div class="form-group"><label class="form-label">Domingo</label><input class="form-input" id="setSun" value="${esc(c.hours.sunday)}"></div>
+        <div class="form-group"><label class="form-label">Abertura (hora)</label><input type="number" class="form-input" id="setOpen" value="${c.hours.openHour}"></div>
+        <div class="form-group"><label class="form-label">Fechamento (hora)</label><input type="number" class="form-input" id="setClose" value="${c.hours.closeHour}"></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="saveHours()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">PIX</div>
+        <div class="form-group"><label class="form-label">Chave</label><input class="form-input" id="setPixKey" value="${esc(c.pix.key)}"></div>
+        <div class="form-group"><label class="form-label">Tipo da chave</label><input class="form-input" id="setPixType" value="${esc(c.pix.keyType)}"></div>
+        <div class="form-group"><label class="form-label">Recebedor</label><input class="form-input" id="setPixRec" value="${esc(c.pix.receiver)}"></div>
+        <div class="form-group"><label class="form-label">Banco</label><input class="form-input" id="setPixBank" value="${esc(c.pix.bank)}"></div>
+        <div class="form-group"><label class="form-label">Instruções</label><textarea class="form-textarea" id="setPixInst">${esc(c.pix.instructions)}</textarea></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="savePix()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Formas de Pagamento</div>
+        <div class="form-group"><label class="form-label">Listar separadas por vírgula</label><input class="form-input" id="setPayments" value="${c.payments.join(', ')}"></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="savePayments()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Lembretes automáticos</div>
+        <div class="form-group"><label><input type="checkbox" id="rem24" ${c.reminders.h24?'checked':''}> 24 horas antes</label></div>
+        <div class="form-group"><label><input type="checkbox" id="rem2" ${c.reminders.h2?'checked':''}> 2 horas antes</label></div>
+        <div class="form-group"><label><input type="checkbox" id="remDay" ${c.reminders.day?'checked':''}> No dia</label></div>
+        <div class="form-group"><label class="form-label">Mensagem 24h</label><textarea class="form-textarea" id="tpl24">${esc(c.reminders.template24)}</textarea></div>
+        <div class="form-group"><label class="form-label">Mensagem 2h</label><textarea class="form-textarea" id="tpl2">${esc(c.reminders.template2)}</textarea></div>
+        <div class="form-group"><label class="form-label">Mensagem do dia</label><textarea class="form-textarea" id="tplDay">${esc(c.reminders.templateDay)}</textarea></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="saveReminders()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Aniversários</div>
+        <div class="form-group"><label class="form-label">Cupom padrão</label><input class="form-input" id="bdCoupon" value="${esc(c.birthday.coupon)}"></div>
+        <div class="form-group"><label class="form-label">Desconto (%)</label><input type="number" class="form-input" id="bdDisc" value="${c.birthday.discount}"></div>
+        <div class="form-group"><label class="form-label">Validade (dias)</label><input type="number" class="form-input" id="bdDays" value="${c.birthday.validDays}"></div>
+        <div class="form-group"><label class="form-label">Mensagem</label><textarea class="form-textarea" id="bdMsg">${esc(c.birthday.message)}</textarea></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="saveBirthday()">Salvar</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Alterar senha do administrador</div>
+        <div class="form-group"><label class="form-label">Senha atual</label><input type="password" class="form-input" id="adminCurPass"></div>
+        <div class="form-group"><label class="form-label">Nova senha</label><input type="password" class="form-input" id="adminNewPass"></div>
+        <button class="btn btn-primary btn-sm mt-2" onclick="changeAdminPass()">Alterar senha</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Avançado</div>
+        <button class="btn btn-danger btn-block mt-2" onclick="resetAllData()">Resetar todo o aplicativo</button>
+        <p class="muted mt-2" style="font-size:12px;">⚠️ Isso apagará todos os dados (clientes, agendamentos, etc).</p>
+      </div>
+    </div>
+  `;
+}
+function saveIdentity() {
+  DB.data.config.appName = document.getElementById('setAppName').value.trim();
+  DB.data.config.logo = document.getElementById('setLogo').value.trim();
+  DB.save();
+  updateLogo();
+  toast('Salvo.');
+}
+function saveContact() {
+  Object.assign(DB.data.config, {
+    phone: document.getElementById('setPhone').value.trim(),
+    whatsapp: document.getElementById('setWhats').value.trim(),
+    email: document.getElementById('setEmail').value.trim(),
+    instagram: document.getElementById('setInsta').value.trim(),
+    facebook: document.getElementById('setFace').value.trim(),
+    website: document.getElementById('setSite').value.trim(),
+  });
+  DB.save(); toast('Salvo.');
+}
+function saveAddress() {
+  Object.assign(DB.data.config.address, {
+    street: document.getElementById('setStreet').value.trim(),
+    district: document.getElementById('setDist').value.trim(),
+    city: document.getElementById('setCity').value.trim(),
+    mapsLink: document.getElementById('setMaps').value.trim(),
+  });
+  DB.save(); toast('Endereço salvo.');
+}
+function saveHours() {
+  Object.assign(DB.data.config.hours, {
+    weekdays: document.getElementById('setWeek').value,
+    saturday: document.getElementById('setSat').value,
+    sunday: document.getElementById('setSun').value,
+    openHour: Number(document.getElementById('setOpen').value),
+    closeHour: Number(document.getElementById('setClose').value),
+  });
+  DB.save(); toast('Horários salvos.');
+}
+function savePix() {
+  Object.assign(DB.data.config.pix, {
+    key: document.getElementById('setPixKey').value.trim(),
+    keyType: document.getElementById('setPixType').value.trim(),
+    receiver: document.getElementById('setPixRec').value.trim(),
+    bank: document.getElementById('setPixBank').value.trim(),
+    instructions: document.getElementById('setPixInst').value.trim(),
+  });
+  DB.save(); toast('PIX salvo.');
+}
+function savePayments() {
+  DB.data.config.payments = document.getElementById('setPayments').value.split(',').map(s=>s.trim()).filter(Boolean);
+  DB.save(); toast('Formas salvas.');
+}
+function saveReminders() {
+  const r = DB.data.config.reminders;
+  r.h24 = document.getElementById('rem24').checked;
+  r.h2 = document.getElementById('rem2').checked;
+  r.day = document.getElementById('remDay').checked;
+  r.template24 = document.getElementById('tpl24').value;
+  r.template2 = document.getElementById('tpl2').value;
+  r.templateDay = document.getElementById('tplDay').value;
+  DB.save(); toast('Lembretes salvos.');
+}
+function saveBirthday() {
+  const b = DB.data.config.birthday;
+  b.coupon = document.getElementById('bdCoupon').value.trim();
+  b.discount = Number(document.getElementById('bdDisc').value);
+  b.validDays = Number(document.getElementById('bdDays').value);
+  b.message = document.getElementById('bdMsg').value;
+  DB.save(); toast('Salvo.');
+}
+function changeAdminPass() {
+  const cur = document.getElementById('adminCurPass').value;
+  const np = document.getElementById('adminNewPass').value;
+  if (State.user.password !== cur) { toast('Senha atual incorreta.', 'error'); return; }
+  if (np.length < 6) { toast('Nova senha muito curta.', 'error'); return; }
+  State.user.password = np;
+  DB.save(); toast('Senha alterada.'); Router.go('admin-settings');
+}
+function resetAllData() {
+  if (!confirm('Tem certeza? Isso apagará TODOS os dados.')) return;
+  if (!confirm('Última confirmação: prosseguir?')) return;
+  DB.reset();
+  State.logout();
+  toast('Aplicativo resetado.');
+  setTimeout(() => location.reload(), 800);
+}
+
+/* ================== MODAL ================== */
+function openModal(html) {
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'modalOverlay';
+  overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+  overlay.innerHTML = `<div class="modal">${html}</div>`;
+  document.body.appendChild(overlay);
+}
+function closeModal() {
+  const el = document.getElementById('modalOverlay');
+  if (el) el.remove();
+}
+
+/* ================== AUTO REMINDERS ================== */
+function processReminders() {
+  const now = Date.now();
+  DB.data.appointments.forEach(a => {
+    if (a.status !== 'confirmed') return;
+    const apptTime = new Date(a.date + 'T' + a.time).getTime();
+    const diff = apptTime - now;
+    const flagKey = `rem_${a.id}`;
+    const flag = DB.data._flags = DB.data._flags || {};
+    if (diff > 0 && diff <= 24*3600*1000 && !flag[flagKey+'_24h'] && DB.data.config.reminders.h24) {
+      flag[flagKey+'_24h'] = true;
+      DB.data.notifications.unshift({ id: uid(), userId: a.userId, title: 'Lembrete: amanhã é seu dia!', message: DB.data.config.reminders.template24.replace('[NOME]', a.userName.split(' ')[0]).replace('[HORARIO]', a.time), type: 'lembrete', read: false, createdAt: Date.now() });
+    }
+    if (diff > 0 && diff <= 2*3600*1000 && !flag[flagKey+'_2h'] && DB.data.config.reminders.h2) {
+      flag[flagKey+'_2h'] = true;
+      DB.data.notifications.unshift({ id: uid(), userId: a.userId, title: 'Faltam 2 horas!', message: DB.data.config.reminders.template2.replace('[NOME]', a.userName.split(' ')[0]).replace('[HORARIO]', a.time), type: 'lembrete', read: false, createdAt: Date.now() });
+    }
+  });
+  DB.save();
+}
+
+/* ================== BOOT ================== */
+window.addEventListener('DOMContentLoaded', () => {
+  DB.init();
+  State.load();
+  applyTheme();
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    splash.style.opacity = '0';
+    setTimeout(() => splash.remove(), 600);
+    document.getElementById('app').classList.add('active');
+    Router.go(State.user ? (State.user.type === 'admin' ? 'admin' : 'home') : 'home');
+    processReminders();
+  }, 1500);
+});
+</script>
+</body>
+</html>
